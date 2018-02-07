@@ -1,33 +1,11 @@
-#include <SFML/Graphics.hpp>
+#include "AFKEngine.h"
 
 
-int main() {
-	sf::RenderWindow window({ 1024, 768 }, "Hello World");
-	sf::CircleShape shape(100.0f);
-	shape.setFillColor(sf::Color::Green);
-
-	window.setFramerateLimit(30);
-
-
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-	
-		window.clear();
-
-		window.draw(shape);
-
-		window.display();
-
-
-	}
-
+int main(int argc, char *argv[]) {
+	AFKEngine afkEngine;
+	afkEngine.Initialize(argc, argv);
+	afkEngine.Start();
 	return 0;
 
 }
 
-//IT WORKS!!

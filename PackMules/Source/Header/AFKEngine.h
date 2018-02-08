@@ -9,8 +9,11 @@ public:
 	void Start();
 	bool Initialize(int argc, char *argv[]);
 private:
+	void LoadObjects();
+
+
 	bool IsExiting();
-	void GameLoop();
+	void Update();
 
 	float GetHardDriveSpace();
 	float GetMemory();
@@ -21,6 +24,8 @@ private:
 	void playSound(std::string fileName);
 	void playMusic(std::string fileName);
 
+	void DrawSplashScreen();
+	void DrawGameScreen();
 	
 
 	enum GameState {
@@ -32,6 +37,7 @@ private:
 		Exiting
 	};
 
+	void SwitchStateTo(GameState newState);
 	GameState gameState;
 	sf::RenderWindow mainWindow;
 	
@@ -39,13 +45,19 @@ private:
 	//sf::SoundBuffer mainAudioBuffer;
 	//sf::Music bgm;
 
-
+	float stateTimer = 0.0f;
+	sf::Clock clock;
 	float minDriveSpace;
 	float minMemory;
 	float minCPUSpeed;
 
 private:
 	//objects
+
+	sf::CircleShape circleShape;
+	sf::Texture SplashScreenTexture;
+	sf::Sprite SplashScreenSprite;
+
 
 };
 

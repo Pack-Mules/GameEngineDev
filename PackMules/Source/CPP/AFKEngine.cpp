@@ -1,8 +1,9 @@
 #include "AFKEngine.h"
 #include <iostream>
 #include <Windows.h>
+#include "SFML\System\Clock.hpp"
 
-
+sf::CircleShape circleShape(100.0f);
 
 AFKEngine::AFKEngine() {
 	minDriveSpace = 0;
@@ -12,7 +13,7 @@ AFKEngine::AFKEngine() {
 
 bool AFKEngine::Initialize(int argc, char *argv[]) {
 
-	gameState = AFKEngine::Uninitialized;
+	SwitchStateTo(Uninitialized);
 
 	std::cout << "Current specs" << std::endl;
 	
@@ -34,6 +35,10 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 	if (GetCPUSpeed() < minCPUSpeed) {
 		return false;
 	}
+
+	return true;
+
+
 }
 
 
@@ -43,29 +48,40 @@ void AFKEngine::Start() {
 	if (gameState != Uninitialized)
 		return;
 
+	LoadObjects();
+
 	//Graphics system
 	mainWindow.create(sf::VideoMode(1024, 768, 32), "A Game");
-	gameState = AFKEngine::Playing;
 
+	clock.restart();
 
-	//Audio system
-	//sf::sound = sfx, sf::music = longer 
-	
-
+	SwitchStateTo(ShowingSplash);
 	while (!IsExiting()) {
-		GameLoop();
+		Update();
 	}
 
 	mainWindow.close();
 
 }
 
-void AFKEngine::GameLoop() {
-	sf::CircleShape shape(100.0f);
-	shape.setFillColor(sf::Color::Green);
+//Loads all the shapes, sprites and audio assets
+void AFKEngine::LoadObjects() {
+	circleShape.setRadius(100.0f);
 
-	//playSound("Hello");
+	std::string path = "../../Assets/";
 
+	if (!SplashScreenTexture.loadFromFile(path+"PackMulesIcon.jpg")) {
+		//error
+	}
+	SplashScreenSprite.setTexture(SplashScreenTexture);
+
+}
+
+void AFKEngine::Update() {
+
+
+
+	stateTimer = clock.getElapsedTime().asSeconds();
 
 	if (mainWindow.isOpen())
 	{
@@ -77,7 +93,19 @@ void AFKEngine::GameLoop() {
 
 		mainWindow.clear();
 
-		mainWindow.draw(shape);
+		//DRAW FUNCTIONS
+		switch (gameState) {
+		case AFKEngine::ShowingSplash:
+			DrawSplashScreen();
+
+			break;
+		case AFKEngine::Playing:
+			DrawGameScreen();
+			break;
+		default:
+			break;
+		}
+
 
 		mainWindow.display();
 
@@ -134,6 +162,30 @@ float AFKEngine::GetCPUSpeed() {
 
 
 
+}
+
+void AFKEngine::SwitchStateTo(GameState newState) {
+	gameState = newState;
+	clock.restart();
+	stateTimer = 0;
+}
+
+void AFKEngine::DrawSplashScreen() {
+	//circleShape.setFillColor(sf::Color::Red);
+
+	mainWindow.draw(SplashScreenSprite);
+
+
+	if (stateTimer > 2.0f)
+		SwitchStateTo(Playing);
+}
+
+void AFKEngine::DrawGameScreen() {
+
+	circleShape.setFillColor(sf::Color::Green);
+
+
+	mainWindow.draw(circleShape);
 }
 
 /*

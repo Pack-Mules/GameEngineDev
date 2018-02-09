@@ -1,10 +1,16 @@
 #include "AFKEngine.h"
+#include "GameObject.h"
 #include <iostream>
 #include <Windows.h>
 #include "SFML\System\Clock.hpp"
 #include "SFML\Audio.hpp"
 
 sf::CircleShape circleShape(100.0f);
+
+GameObject *scene;
+GameObject *parentCircle;
+GameObject *childCircle;
+
 
 AFKEngine::AFKEngine() {
 	//no minimum requirements atm
@@ -71,6 +77,29 @@ void AFKEngine::Start() {
 
 //Loads all the shapes, sprites and audio assets
 void AFKEngine::LoadObjects() {
+
+	scene =  new GameObject();
+	parentCircle = new GameObject();
+	childCircle = new GameObject();
+
+	scene->AddChild(parentCircle);
+	parentCircle->AddChild(childCircle);
+
+	Matrix4* mat = new Matrix4();
+
+	parentCircle->SetTransform(mat->translate(Vector3(100, 0, 0)));
+	std::cout << "Translating parent 100 units on x. \n";
+	childCircle->SetTransform(mat->translate(Vector3(100, 0, 0)));
+	std::cout << "Translating child 100 units on x. \n \n";
+
+	std::cout << "Parent transform: \n"
+		<< parentCircle->GetTransform()
+		<< "\n Child transform: \n"
+		<< childCircle->GetTransform();
+
+
+
+
 	circleShape.setRadius(100.0f);
 
 	std::string path = "../../Assets/Images/";
@@ -156,8 +185,8 @@ void AFKEngine::DrawGameScreen() {
 
 	circleShape.setFillColor(sf::Color::Green);
 
-
 	mainWindow.draw(circleShape);
+
 }
 
 

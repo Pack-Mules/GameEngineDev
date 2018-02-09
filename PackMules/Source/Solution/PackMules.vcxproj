@@ -20,10 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CPP\AFKEngine.cpp" />
+    <ClCompile Include="..\CPP\GameObject.cpp" />
     <ClCompile Include="..\CPP\main.cpp" />
+    <ClCompile Include="..\CPP\Matrices.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\AFKEngine.h" />
+    <ClInclude Include="..\Header\GameObject.h" />
+    <ClInclude Include="..\Header\Matrices.h" />
+    <ClInclude Include="..\Header\Vectors.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

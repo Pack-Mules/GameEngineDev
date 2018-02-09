@@ -3,8 +3,13 @@
 
 int main(int argc, char *argv[]) {
 	AFKEngine engine;
-	engine.Initialize(argc, argv);
+
+	//If failed system requirements
+	if (!engine.Initialize(argc, argv))
+		return 1;
+
 	engine.Start();
+
 	return 0;
 
 }

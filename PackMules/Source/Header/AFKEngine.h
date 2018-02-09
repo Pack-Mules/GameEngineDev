@@ -42,8 +42,8 @@ private:
 	sf::RenderWindow mainWindow;
 	
 	
-	//sf::SoundBuffer mainAudioBuffer;
-	//sf::Music bgm;
+	sf::SoundBuffer mainAudioBuffer;
+	sf::Music bgm;
 
 	float stateTimer = 0.0f;
 	sf::Clock clock;

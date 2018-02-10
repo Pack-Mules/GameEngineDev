@@ -11,6 +11,8 @@ GameObject *scene;
 GameObject *parentCircle;
 GameObject *childCircle;
 
+Matrix4* mat;
+bool circleRight;
 
 AFKEngine::AFKEngine() {
 	//no minimum requirements atm
@@ -20,7 +22,6 @@ AFKEngine::AFKEngine() {
 }
 
 bool AFKEngine::Initialize(int argc, char *argv[]) {
-
 	SwitchStateTo(Uninitialized);
 
 	std::cout << "Current specs" << std::endl;
@@ -56,6 +57,7 @@ void AFKEngine::Start() {
 		return;
 
 
+	mat = new Matrix4();
 	//Graphics system
 	mainWindow.create(sf::VideoMode(1024, 768, 32), "A Game");
 	clock.restart();
@@ -85,7 +87,6 @@ void AFKEngine::LoadObjects() {
 	scene->AddChild(parentCircle);
 	parentCircle->AddChild(childCircle);
 
-	Matrix4* mat = new Matrix4();
 
 	parentCircle->SetTransform(mat->translate(Vector3(100, 0, 0)));
 	std::cout << "Translating parent 100 units on x. \n";
@@ -93,22 +94,24 @@ void AFKEngine::LoadObjects() {
 	std::cout << "Translating child 100 units on x. \n \n";
 
 	std::cout << "Parent transform: \n"
-		<< parentCircle->GetTransform()
-		<< "\n Child transform: \n"
-		<< childCircle->GetTransform();
-
+	<< parentCircle->GetTransform()
+	<< "\n Child transform: \n"
+	<< childCircle->GetTransform();
+	std::cout << "\n" << parentCircle->GetTransform()[12] << std::endl;
 
 
 
 	circleShape.setRadius(100.0f);
+	circleShape.setFillColor(sf::Color::Green);
+	circleRight = true;
 
 	std::string path = "../../Assets/Images/";
 
-	if (!SplashScreenTexture.loadFromFile(path+"PackMulesIcon.jpg")) {
+	if (!SplashScreenTexture.loadFromFile(path + "PackMulesIcon.jpg")) {
 	}
 	SplashScreenSprite.setTexture(SplashScreenTexture);
 	SplashScreenSprite.setOrigin(
-		SplashScreenSprite.getLocalBounds().width / 2, 
+		SplashScreenSprite.getLocalBounds().width / 2,
 		SplashScreenSprite.getLocalBounds().height / 2);
 	SplashScreenSprite.setPosition(
 		mainWindow.getSize().x / 2,
@@ -182,8 +185,21 @@ void AFKEngine::DrawSplashScreen() {
 }
 
 void AFKEngine::DrawGameScreen() {
+	//moving circle
+	if (parentCircle->GetTransform()[12] < 0 && circleRight == false){
+		circleRight = true;
+		
+	} else if (parentCircle->GetTransform()[12] + circleShape.getLocalBounds().width > mainWindow.getSize().x
+			&& circleRight == true) {
+			circleRight = false;
+	}
 
-	circleShape.setFillColor(sf::Color::Green);
+	if (circleRight)
+		parentCircle->SetTransform(mat->translate(Vector3(1, 0, 0)));
+	else
+		parentCircle->SetTransform(mat->translate(Vector3(-1, 0, 0)));
+
+	circleShape.setPosition(parentCircle->GetTransform()[12], 0);
 
 	mainWindow.draw(circleShape);
 

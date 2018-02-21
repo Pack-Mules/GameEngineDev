@@ -9,6 +9,12 @@ public:
 	void SetTransform(const Matrix4 &matrix) { transform = matrix; }
 	Matrix4 GetTransform() { return transform; }
 	Matrix4 GetWorldTransform() { return worldTransform; }
+
+
+	float GetPositionX() { return transform[12]; }
+	float GetPositionY() { return transform[13]; }
+	float GetPositionZ() { return transform[14]; }
+
 	//void SetParent(GameObject& p) { parent = p; }
 	void AddChild(GameObject* s);
 	virtual void Update(float msec);

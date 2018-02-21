@@ -9,6 +9,7 @@ public:
 	void Start();
 	bool Initialize(int argc, char *argv[]);
 private:
+	void LoadAssets();
 	void LoadObjects();
 
 
@@ -24,7 +25,10 @@ private:
 	void playSound(std::string fileName);
 	void playMusic(std::string fileName);
 
+	void UpdateSplashScreen();
 	void DrawSplashScreen();
+
+	void UpdateGameScreen();
 	void DrawGameScreen();
 	
 

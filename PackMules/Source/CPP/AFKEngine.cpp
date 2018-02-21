@@ -35,15 +35,22 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 	if (GetMemory() < minMemory) {
 		return false;
 	}
-	//Placeholder atm
-	//std::cout << "Input Devices: " << std::endl << std::endl;
-	//std::cout << "Output Devices: " << std::endl << std::endl;
 
 	std::cout << "CPU Speed: " << GetCPUSpeed() << " MHz" <<std::endl;
 	if (GetCPUSpeed() < minCPUSpeed) {
 		return false;
 	}
 
+
+	//Placeholder atm
+	//std::cout << "Input Devices: " << std::endl << std::endl;
+	//std::cout << "Output Devices: " << std::endl << std::endl;
+	if (sf::Joystick::isConnected(0))
+		std::cout << "Joystick detected" << std::endl;
+	else 
+		std::cout << "No Joystick detected" << std::endl;
+
+	std::cout << "\n\n\n\n";
 	return true;
 
 
@@ -62,6 +69,7 @@ void AFKEngine::Start() {
 	mainWindow.create(sf::VideoMode(1024, 768, 32), "A Game");
 	clock.restart();
 
+	LoadAssets();
 	LoadObjects();
 
 	//Audio started
@@ -105,6 +113,12 @@ void AFKEngine::LoadObjects() {
 	circleShape.setFillColor(sf::Color::Green);
 	circleRight = true;
 
+
+
+
+}
+
+void AFKEngine::LoadAssets() {
 	std::string path = "../../Assets/Images/";
 
 	if (!SplashScreenTexture.loadFromFile(path + "PackMulesIcon.jpg")) {
@@ -116,9 +130,8 @@ void AFKEngine::LoadObjects() {
 	SplashScreenSprite.setPosition(
 		mainWindow.getSize().x / 2,
 		mainWindow.getSize().y / 2);
-
-
 }
+
 
 void AFKEngine::Update() {
 
@@ -139,12 +152,13 @@ void AFKEngine::Update() {
 		//STATE Functions
 		switch (gameState) {
 		case AFKEngine::ShowingSplash:
+			UpdateSplashScreen();
 			DrawSplashScreen();
 
 			break;
 		case AFKEngine::Playing:
+			UpdateGameScreen();
 			DrawGameScreen();
-
 
 			break;
 		default:
@@ -175,34 +189,37 @@ void AFKEngine::SwitchStateTo(GameState newState) {
 	stateTimer = 0;
 }
 
+
+void AFKEngine::UpdateSplashScreen() {
+	if (stateTimer > 5.0f)
+		SwitchStateTo(Playing);
+
+}
 void AFKEngine::DrawSplashScreen() {
 	//circleShape.setFillColor(sf::Color::Red);
 	mainWindow.draw(SplashScreenSprite);
-
-
-	if (stateTimer > 5.0f)
-		SwitchStateTo(Playing);
 }
 
-void AFKEngine::DrawGameScreen() {
+
+void AFKEngine::UpdateGameScreen() {
 	//moving circle
-	if (parentCircle->GetTransform()[12] < 0 && circleRight == false){
+	//TODO: Make a GetX value?
+	if (parentCircle->GetPositionX() < 0 && circleRight == false) 
 		circleRight = true;
-		
-	} else if (parentCircle->GetTransform()[12] + circleShape.getLocalBounds().width > mainWindow.getSize().x
-			&& circleRight == true) {
-			circleRight = false;
-	}
+	else if (parentCircle->GetPositionX() + circleShape.getLocalBounds().width > mainWindow.getSize().x
+		&& circleRight == true)
+		circleRight = false;
 
 	if (circleRight)
 		parentCircle->SetTransform(mat->translate(Vector3(1, 0, 0)));
 	else
 		parentCircle->SetTransform(mat->translate(Vector3(-1, 0, 0)));
 
-	circleShape.setPosition(parentCircle->GetTransform()[12], 0);
+	circleShape.setPosition(parentCircle->GetPositionX(), 0);
+}
 
+void AFKEngine::DrawGameScreen() {
 	mainWindow.draw(circleShape);
-
 }
 
 

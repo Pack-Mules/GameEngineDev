@@ -21,7 +21,7 @@ void GameObject::Update(float msec) {
 		transform.SetWorldPosition(parent->transform.GetWorldPosition() * transform.GetPosition());
 	}
 	else { //Root node, world transform is local transform!
-		//transform.SetPosition(transform.GetPosition());
+		transform.SetWorldPosition(transform.GetPosition());
 	}
 
 

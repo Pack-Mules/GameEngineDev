@@ -12,7 +12,8 @@ GameObject *parentCircle;
 GameObject *childCircle;
 
 Matrix4* mat;
-bool circleRight;
+bool parentCircleRight;
+bool childCircleUp;
 
 AFKEngine::AFKEngine() {
 	//no minimum requirements atm
@@ -25,8 +26,8 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 	SwitchStateTo(Uninitialized);
 
 	std::cout << "Current specs" << std::endl;
-	
-	std::cout << "Hard Drive Space: " << GetHardDriveSpace() << " MB"<< std::endl;
+
+	std::cout << "Hard Drive Space: " << GetHardDriveSpace() << " MB" << std::endl;
 	if (GetHardDriveSpace() < minDriveSpace) {
 		return false;
 	}
@@ -36,7 +37,7 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 		return false;
 	}
 
-	std::cout << "CPU Speed: " << GetCPUSpeed() << " MHz" <<std::endl;
+	std::cout << "CPU Speed: " << GetCPUSpeed() << " MHz" << std::endl;
 	if (GetCPUSpeed() < minCPUSpeed) {
 		return false;
 	}
@@ -47,7 +48,7 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 	//std::cout << "Output Devices: " << std::endl << std::endl;
 	if (sf::Joystick::isConnected(0))
 		std::cout << "Joystick detected" << std::endl;
-	else 
+	else
 		std::cout << "No Joystick detected" << std::endl;
 
 	std::cout << "\n\n\n\n";
@@ -88,7 +89,7 @@ void AFKEngine::Start() {
 //Loads all the shapes, sprites and audio assets
 void AFKEngine::LoadObjects() {
 
-	scene =  new GameObject();
+	scene = new GameObject();
 	parentCircle = new GameObject();
 	childCircle = new GameObject();
 
@@ -96,26 +97,27 @@ void AFKEngine::LoadObjects() {
 	parentCircle->AddChild(childCircle);
 
 
-	parentCircle->transform.SetPosition(mat->translate(Vector3(100, 0, 0)));
+	parentCircle->transform.Translate(Vector3(100, 0, 0));
 	std::cout << "Translating parent 100 units on x. \n";
 
 
-	childCircle->transform.SetPosition(mat->translate(Vector3(100, 0, 0)));
+	childCircle->transform.Translate(Vector3(100, 50, 0));
 	std::cout << "Translating child 100 units on x. \n \n";
 
 	std::cout << "Parent transform: \n"
-	<< parentCircle->transform.GetPosition()
-	<< "\n Child transform: \n"
-	<< childCircle->transform.GetPosition();
+		<< parentCircle->transform.GetPosition()
+		<< "\n Child transform: \n"
+		<< childCircle->transform.GetPosition();
 
 
 
-	circleShape.setRadius(100.0f);
-	circleShape.setFillColor(sf::Color::Green);
-	circleRight = true;
+	parentCircleShape.setRadius(100.0f);
+	parentCircleShape.setFillColor(sf::Color::Green);
+	parentCircleRight = true;
 
-
-
+	childCircleShape.setRadius(20.0f);
+	childCircleShape.setFillColor(sf::Color::Blue);
+	childCircleUp = true;
 
 }
 
@@ -192,35 +194,49 @@ void AFKEngine::SwitchStateTo(GameState newState) {
 
 
 void AFKEngine::UpdateSplashScreen() {
-	if (stateTimer > 5.0f)
+	if (stateTimer > 2.0f)
 		SwitchStateTo(Playing);
 
 }
 void AFKEngine::DrawSplashScreen() {
-	//circleShape.setFillColor(sf::Color::Red);
+
 	mainWindow.draw(SplashScreenSprite);
 }
 
 
 void AFKEngine::UpdateGameScreen() {
+	float dt = 0.01f;// &clock.getElapsedTime().asMilliseconds;
+	parentCircle->Update(dt);
+	childCircle->Update(dt);
 	//moving circle
-	//TODO: Make a GetX value?
-	if (parentCircle->transform.x < 0 && circleRight == false) 
-		circleRight = true;
-	else if (parentCircle->transform.x + circleShape.getLocalBounds().width > mainWindow.getSize().x
-		&& circleRight == true)
-		circleRight = false;
+	if (parentCircle->transform.x <= 0 && parentCircleRight == false)
+		parentCircleRight = true;
+	else if (parentCircle->transform.x + parentCircleShape.getLocalBounds().width >= mainWindow.getSize().x
+		&& parentCircleRight == true)
+		parentCircleRight = false;
 
-	if (circleRight)
-		parentCircle->transform.SetPosition(mat->translate(Vector3(1, 0, 0)));
+	if (childCircle->transform.y <= 0) 
+		childCircleUp = true;
+	else if (childCircle->transform.y >= 200)
+		childCircleUp = false;
+
+	if (parentCircleRight)
+		parentCircle->transform.Translate(Vector3(1, 0, 0));
 	else
-		parentCircle->transform.SetPosition(mat->translate(Vector3(-1, 0, 0)));
-
-	circleShape.setPosition(parentCircle->transform.x, 0);
+		parentCircle->transform.Translate(Vector3(-1, 0, 0));
+	
+	if (childCircleUp)
+		childCircle->transform.Translate(Vector3(0, 0.5f, 0));
+	else
+		childCircle->transform.Translate(Vector3(0, -0.5f, 0));
+	
+	parentCircleShape.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
+	childCircleShape.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
 }
 
 void AFKEngine::DrawGameScreen() {
-	mainWindow.draw(circleShape);
+	mainWindow.draw(parentCircleShape);
+	mainWindow.draw(childCircleShape);
 }
 
 

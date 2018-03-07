@@ -50,6 +50,7 @@ private:
 	sf::Music bgm;
 
 	float stateTimer = 0.0f;
+	float SplashScreenTimer = 3.0f;
 	sf::Clock clock;
 	float minDriveSpace;
 	float minMemory;
@@ -58,7 +59,8 @@ private:
 private:
 	//objects
 
-	sf::CircleShape circleShape;
+	sf::CircleShape parentCircleShape;
+	sf::CircleShape childCircleShape;
 	sf::Texture SplashScreenTexture;
 	sf::Sprite SplashScreenSprite;
 

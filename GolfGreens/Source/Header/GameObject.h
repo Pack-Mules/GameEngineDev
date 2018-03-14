@@ -13,9 +13,12 @@ public:
 
 	//void SetParent(GameObject& p) { parent = p; }
 	void AddChild(GameObject* s);
+	void RemoveChild(GameObject* s);
+
+
 	virtual void Update(float msec);
 
-
+	public int id;
 	Transform transform;
 
 protected:

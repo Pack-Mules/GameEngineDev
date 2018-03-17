@@ -6,6 +6,8 @@
 
 class Rigidbody : public Component {
 public:
+	//TODO; In order to check we aren't comparing the same Rigidbody (rb != rigidBody), I think we should use
+	// id, where rb.id != rigidBody.id, and id is a randomly generated value
 	float id;
 	
 	Transform transform; 

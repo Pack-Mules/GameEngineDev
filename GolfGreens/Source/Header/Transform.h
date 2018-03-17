@@ -14,6 +14,9 @@ public:
 	Matrix4 GetWorldPosition() { return WorldPosition; }
 
 	void SetPosition(const Matrix4 &matrix) { Position = matrix; UpdateXYZ(); }
+	void SetPosition(Vector2 vector);
+	void SetPosition(Vector3 vector);
+
 	Matrix4 GetPosition() { return Position; }
 
 	void Translate(Vector3 vec) {

@@ -18,7 +18,6 @@ public:
 
 	virtual void Update(float msec);
 
-	public int id;
 	Transform transform;
 
 protected:

@@ -31,6 +31,8 @@
     <ClInclude Include="..\Header\Component.h" />
     <ClInclude Include="..\Header\GameObject.h" />
     <ClInclude Include="..\Header\Matrices.h" />
+    <ClInclude Include="..\Header\PhysicsEngine.h" />
+    <ClInclude Include="..\Header\Rigidbody.h" />
     <ClInclude Include="..\Header\Transform.h" />
     <ClInclude Include="..\Header\Vectors.h" />
   </ItemGroup>

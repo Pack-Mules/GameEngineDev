@@ -42,7 +42,7 @@ private:
 	};
 
 	void SwitchStateTo(GameState newState);
-	GameState gameState;
+	GameState gameState = Uninitialized;
 	sf::RenderWindow mainWindow;
 	
 	

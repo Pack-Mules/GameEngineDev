@@ -23,7 +23,7 @@ AFKEngine::AFKEngine() {
 }
 
 bool AFKEngine::Initialize(int argc, char *argv[]) {
-	SwitchStateTo(Uninitialized);
+	SwitchStateTo(ShowingSplash);
 
 	std::cout << "Current specs" << std::endl;
 
@@ -61,9 +61,10 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 
 //Only run once
 void AFKEngine::Start() {
-	if (gameState != Uninitialized)
+	if (gameState == Uninitialized)
 		return;
 
+	SwitchStateTo(Playing);
 
 	mat = new Matrix4();
 	//Graphics system
@@ -77,7 +78,6 @@ void AFKEngine::Start() {
 	AFKEngine::playMusic("Madeon - Pop Culture.flac");
 
 
-	SwitchStateTo(ShowingSplash);
 	while (!IsExiting()) {
 		Update();
 	}
@@ -194,8 +194,6 @@ void AFKEngine::SwitchStateTo(GameState newState) {
 
 
 void AFKEngine::UpdateSplashScreen() {
-	if (stateTimer > 2.0f)
-		SwitchStateTo(Playing);
 
 }
 void AFKEngine::DrawSplashScreen() {

@@ -27,6 +27,7 @@ public:
 	void AddComponent(Component* newS) { Components.push_back(newS); }
 
 	Transform transform;
+	Rigidbody rigidbody;
 	std::list<Component*> Components;
 
 	sf::Sprite sprite;

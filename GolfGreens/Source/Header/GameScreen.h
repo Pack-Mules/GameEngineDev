@@ -1,13 +1,9 @@
 #ifndef GAMESCREEN_H
 #define GAMESCREEN_H
 
-#include "AFKEngine.h"
 #include "Screen.h"
 #include "GameObject.h"
-#include <iostream>
-#include <Windows.h>
 #include "SFML/Graphics.hpp"
-#include "SFML/Audio.hpp"
 
 
 class GameScreen : public Screen {

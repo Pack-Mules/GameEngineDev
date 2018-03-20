@@ -1,5 +1,7 @@
 #include "AFKEngine.h"
 #include "GameObject.h"
+#include "GameScreen.h"
+#include "SplashScreen.h"
 #include <iostream>
 #include <Windows.h>
 #include "SFML\System\Clock.hpp"
@@ -7,13 +9,8 @@
 
 sf::CircleShape circleShape(100.0f);
 
-GameObject *scene;
-GameObject *parentCircle;
-GameObject *childCircle;
-
-Matrix4* mat;
-bool parentCircleRight;
-bool childCircleUp;
+SplashScreen* splashScreen;
+GameScreen* gameScreen;
 
 AFKEngine::AFKEngine() {
 	//no minimum requirements atm
@@ -66,7 +63,6 @@ void AFKEngine::Start() {
 
 	SwitchStateTo(Playing);
 
-	mat = new Matrix4();
 	//Graphics system
 	mainWindow.create(sf::VideoMode(1024, 768, 32), "A Game");
 	clock.restart();
@@ -88,51 +84,12 @@ void AFKEngine::Start() {
 
 //Loads all the shapes, sprites and audio assets
 void AFKEngine::LoadObjects() {
-
-	scene = new GameObject();
-	parentCircle = new GameObject();
-	childCircle = new GameObject();
-
-	scene->AddChild(parentCircle);
-	parentCircle->AddChild(childCircle);
-
-
-	parentCircle->transform.Translate(Vector3(100, 0, 0));
-	std::cout << "Translating parent 100 units on x. \n";
-
-
-	childCircle->transform.Translate(Vector3(100, 50, 0));
-	std::cout << "Translating child 100 units on x. \n \n";
-
-	std::cout << "Parent transform: \n"
-		<< parentCircle->transform.GetPosition()
-		<< "\n Child transform: \n"
-		<< childCircle->transform.GetPosition();
-
-
-
-	parentCircleShape.setRadius(100.0f);
-	parentCircleShape.setFillColor(sf::Color::Green);
-	parentCircleRight = true;
-
-	childCircleShape.setRadius(20.0f);
-	childCircleShape.setFillColor(sf::Color::Blue);
-	childCircleUp = true;
-
+	splashScreen = new SplashScreen();
+	gameScreen = new GameScreen();
 }
 
 void AFKEngine::LoadAssets() {
-	std::string path = "../../Assets/Images/";
 
-	if (!SplashScreenTexture.loadFromFile(path + "PackMulesIcon.jpg")) {
-	}
-	SplashScreenSprite.setTexture(SplashScreenTexture);
-	SplashScreenSprite.setOrigin(
-		SplashScreenSprite.getLocalBounds().width / 2,
-		SplashScreenSprite.getLocalBounds().height / 2);
-	SplashScreenSprite.setPosition(
-		mainWindow.getSize().x / 2,
-		mainWindow.getSize().y / 2);
 }
 
 
@@ -155,13 +112,13 @@ void AFKEngine::Update() {
 		//STATE Functions
 		switch (gameState) {
 		case AFKEngine::ShowingSplash:
-			UpdateSplashScreen();
-			DrawSplashScreen();
+			splashScreen->Update(mainWindow);
+			splashScreen->Draw(mainWindow);
 
 			break;
 		case AFKEngine::Playing:
-			UpdateGameScreen();
-			DrawGameScreen();
+			gameScreen->Update(mainWindow);
+			gameScreen->Draw(mainWindow);
 
 			break;
 		default:
@@ -190,51 +147,6 @@ void AFKEngine::SwitchStateTo(GameState newState) {
 	gameState = newState;
 	clock.restart();
 	stateTimer = 0;
-}
-
-
-void AFKEngine::UpdateSplashScreen() {
-
-}
-void AFKEngine::DrawSplashScreen() {
-
-	mainWindow.draw(SplashScreenSprite);
-}
-
-
-void AFKEngine::UpdateGameScreen() {
-	float dt = 0.01f;// &clock.getElapsedTime().asMilliseconds;
-	parentCircle->Update(dt);
-	childCircle->Update(dt);
-	//moving circle
-	if (parentCircle->transform.x <= 0 && parentCircleRight == false)
-		parentCircleRight = true;
-	else if (parentCircle->transform.x + parentCircleShape.getLocalBounds().width >= mainWindow.getSize().x
-		&& parentCircleRight == true)
-		parentCircleRight = false;
-
-	if (childCircle->transform.y <= 0) 
-		childCircleUp = true;
-	else if (childCircle->transform.y >= 200)
-		childCircleUp = false;
-
-	if (parentCircleRight)
-		parentCircle->transform.Translate(Vector3(1, 0, 0));
-	else
-		parentCircle->transform.Translate(Vector3(-1, 0, 0));
-	
-	if (childCircleUp)
-		childCircle->transform.Translate(Vector3(0, 0.5f, 0));
-	else
-		childCircle->transform.Translate(Vector3(0, -0.5f, 0));
-	
-	parentCircleShape.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
-	childCircleShape.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
-}
-
-void AFKEngine::DrawGameScreen() {
-	mainWindow.draw(parentCircleShape);
-	mainWindow.draw(childCircleShape);
 }
 
 

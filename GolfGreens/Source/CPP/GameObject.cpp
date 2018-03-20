@@ -2,7 +2,8 @@
 
 GameObject::GameObject() {
 	parent = NULL;
-	Components.push_back(transform);
+	Components.push_back(&transform);
+
 }
 
 GameObject::~GameObject() {

@@ -1,6 +1,12 @@
+
+
+#ifndef AFKENGINE_H
+#define AFKENGINE_H
+
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
+
 
 class AFKEngine
 {
@@ -25,11 +31,6 @@ private:
 	void playSound(std::string fileName);
 	void playMusic(std::string fileName);
 
-	void UpdateSplashScreen();
-	void DrawSplashScreen();
-
-	void UpdateGameScreen();
-	void DrawGameScreen();
 	
 
 	enum GameState {
@@ -56,14 +57,10 @@ private:
 	float minMemory;
 	float minCPUSpeed;
 
+
+
 private:
-	//objects
-
-	sf::CircleShape parentCircleShape;
-	sf::CircleShape childCircleShape;
-	sf::Texture SplashScreenTexture;
-	sf::Sprite SplashScreenSprite;
-
 
 };
 
+#endif

@@ -27,8 +27,8 @@ public:
 	bool childCircleUp;
 
 	//objects
-	sf::CircleShape parentCircleShape;
-	sf::CircleShape childCircleShape;
+	//sf::CircleShape parentCircleShape;
+	//sf::CircleShape childCircleShape;
 private:
 };
 #endif

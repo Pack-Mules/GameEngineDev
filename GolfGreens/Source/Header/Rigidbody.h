@@ -1,4 +1,8 @@
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
+
 #include "Component.h"
+#include "GameObject.h"
 #include "Vectors.h"
 #include "Transform.h"
 
@@ -6,13 +10,18 @@ class Rigidbody : public Component {
 public:
 	//TODO; In order to check we aren't comparing the same Rigidbody (rb != rigidBody), I think we should use
 	// id, where rb.id != rigidBody.id, and id is a randomly generated value
+	// IsGrounded() Function implementation
 	float id;
-	
+
+	class GameObject* gameObject;
+
 	enum Shape { Rectangle, Circle };
 	Shape shape = Rectangle;
 
+
 	//the other transform component of the gameObject
 	Transform transform; 
+	sf::CircleShape cs;
 
 	float mass = 1.0f;                             // Mass of the RigidBody
 	float bounciness = 1;                        // The bounciness factor (value between 0 and 1, 0 being no bounce, and 1 being super bouncy!)
@@ -24,6 +33,8 @@ public:
 
 	bool grounded;
 	bool moveable = true;
+
+	Vector2 bounds[2];
 
 	
 
@@ -54,10 +65,19 @@ public:
 	}
 
 	
-	void SetAABB();
-	/* TODO: wtf is bounds in sfml?
+	void SetAABB()
+	// TODO: wtf is bounds in sfml?
 	{
-		Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
+		
+		bounds[0] = Vector2(transform.xWorld, transform.yWorld + cs.getGlobalBounds().height );
+		bounds[1] = Vector2(transform.xWorld + cs.getGlobalBounds().width, transform.yWorld);
+
+
+		
+
+
+		//Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
+		/*
 		Renderer renderer = GetComponent<Renderer>();
 
 		if (renderer)
@@ -67,6 +87,7 @@ public:
 
 		aabb.bLeft = new Vector2(bound.center.x - bound.extents.x, bound.center.y - bound.extents.y);
 		aabb.tRight = new Vector2(bound.center.x + bound.extents.x, bound.center.y + bound.extents.y);
+		
 	}
 
 	void Start() {
@@ -74,8 +95,9 @@ public:
 		engine = GameObject.FindWithTag("PhysicsEngine").GetComponent<PhysicsEngine>();
 
 		engine.AddRigidBody(this);
+		*/
 	}
-	*/
+	
 	void Integrate(float dT) {
 		/// 
 		/// If this object is affected by gravity and not grounded, add gravity force
@@ -103,4 +125,12 @@ public:
 
 		totalForces = Vector2(0.0f, 0.0f);
 	}
+
+	bool IsGrounded() {
+		
+		return false;
+	}
+
 };
+
+#endif

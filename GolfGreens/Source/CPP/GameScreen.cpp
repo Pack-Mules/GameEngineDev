@@ -1,3 +1,4 @@
+
 #include "GameScreen.h"
 #include "Screen.h"
 #include "GameObject.h"
@@ -18,7 +19,7 @@ void GameScreen::Update(sf::RenderWindow &win) {
 	//moving circle
 	if (parentCircle->transform.x <= 0 && parentCircleRight == false)
 		parentCircleRight = true;
-	else if (parentCircle->transform.x + parentCircleShape.getLocalBounds().width >= win.getSize().x
+	else if (parentCircle->transform.x + parentCircle->cs.getLocalBounds().width >= win.getSize().x
 		&& parentCircleRight == true)
 		parentCircleRight = false;
 
@@ -28,23 +29,38 @@ void GameScreen::Update(sf::RenderWindow &win) {
 		childCircleUp = false;
 
 	if (parentCircleRight)
-		parentCircle->transform.Translate(Vector3(1, 0, 0));
+	{
+	
+		parentCircle->transform.Translate(Vector3(0.1f, 0, 0));
+		parentCircle->transform.ChangeScale(Vector3(1.0f * 1.0001f, 1.0f * 1.0001f, 1.0f * 1.0001f));
+	}
 	else
-		parentCircle->transform.Translate(Vector3(-1, 0, 0));
+	{
+		parentCircle->RemoveChild(childCircle);
+		parentCircle->transform.Translate(Vector3(-0.1f, 0, 0));
+		parentCircle->transform.ChangeScale(Vector3(1.0f / 1.0001f, 1.0f / 1.0001f, 1.0f / 1.0001f));
+	}
 
 	if (childCircleUp)
-		childCircle->transform.Translate(Vector3(0, 0.5f, 0));
+		childCircle->transform.Translate(Vector3(0, 0.05f, 0));
 	else
-		childCircle->transform.Translate(Vector3(0, -0.5f, 0));
+		childCircle->transform.Translate(Vector3(0, -0.05f, 0));
 
-	parentCircleShape.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
-	childCircleShape.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
+	parentCircle->cs.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
+	childCircle->cs.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
+	parentCircle->cs.setScale(parentCircle->transform.xWorldScale, parentCircle->transform.yWorldScale);
+	childCircle->cs.setScale(childCircle->transform.xWorldScale, childCircle->transform.yWorldScale);
+
+	childCircle->rigidbody.SetAABB();
+
+	std::cout << "BL of child:  " << childCircle->rigidbody.bounds[0] << std::endl;
+
 
 }
 
 void GameScreen::Draw(sf::RenderWindow &win) {
-	win.draw(parentCircleShape);
-	win.draw(childCircleShape);
+	win.draw(parentCircle->cs);
+	win.draw(childCircle->cs);
 }
 
 void GameScreen::LoadAssets() {
@@ -59,12 +75,16 @@ void GameScreen::LoadObjects() {
 	scene->AddChild(parentCircle);
 	parentCircle->AddChild(childCircle);
 
-	parentCircleShape.setRadius(100.0f);
-	parentCircleShape.setFillColor(sf::Color::Green);
+	parentCircle->cs.setRadius(100.0f);
+	parentCircle->cs.setFillColor(sf::Color::Green);
 	parentCircleRight = true;
 
-	childCircleShape.setRadius(20.0f);
-	childCircleShape.setFillColor(sf::Color::Blue);
+	childCircle->cs.setRadius(20.0f);
+	childCircle->cs.setFillColor(sf::Color::Blue);
 	childCircleUp = true;
 	LoadedObjects = true;
+
+	if (parentCircle->rigidbody.gameObject == parentCircle)
+		std::cout << "true\n";
+	
 }

@@ -28,6 +28,7 @@ public:
 
 	Transform transform;
 	Rigidbody rigidbody;
+	sf::CircleShape cs;
 	std::list<Component*> Components;
 
 	sf::Sprite sprite;

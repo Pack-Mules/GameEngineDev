@@ -20,8 +20,8 @@ public:
 
 
 	//the other transform component of the gameObject
-	Transform transform; 
-	sf::CircleShape cs;
+	Transform* transform; 
+	sf::CircleShape *cs;
 
 	float mass = 1.0f;                             // Mass of the RigidBody
 	float bounciness = 1;                        // The bounciness factor (value between 0 and 1, 0 being no bounce, and 1 being super bouncy!)
@@ -68,11 +68,8 @@ public:
 	void SetAABB()
 	// TODO: wtf is bounds in sfml?
 	{
-		
-		bounds[0] = Vector2(transform.xWorld, transform.yWorld + cs.getGlobalBounds().height );
-		bounds[1] = Vector2(transform.xWorld + cs.getGlobalBounds().width, transform.yWorld);
-
-
+		bounds[0] = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height );
+		bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
 		
 
 
@@ -118,9 +115,9 @@ public:
 
 		currentVelocity += acceleration * dT;
 
-		Vector2 temp = Vector2(transform.x, transform.y);
+		Vector2 temp = Vector2(transform->x, transform->y);
 		temp += currentVelocity * dT;
-		transform.SetPosition(temp);
+		transform->SetPosition(temp);
 		SetAABB();
 
 		totalForces = Vector2(0.0f, 0.0f);

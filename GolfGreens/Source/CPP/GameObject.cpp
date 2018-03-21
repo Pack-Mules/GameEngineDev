@@ -3,8 +3,8 @@
 GameObject::GameObject() {
 	parent = NULL;
 	rigidbody.gameObject = this;
-	rigidbody.transform = transform;
-	rigidbody.cs = cs;
+	rigidbody.transform = &transform;
+	rigidbody.cs = &cs;
 	Components.push_back(&transform);
 
 }

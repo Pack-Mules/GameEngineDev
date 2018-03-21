@@ -48,12 +48,15 @@ void GameScreen::Update(sf::RenderWindow &win) {
 
 	parentCircle->cs.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
 	childCircle->cs.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
-	parentCircle->cs.setScale(parentCircle->transform.xWorldScale, parentCircle->transform.yWorldScale);
-	childCircle->cs.setScale(childCircle->transform.xWorldScale, childCircle->transform.yWorldScale);
 
+	//parentCircle->cs.setScale(parentCircle->transform.xWorldScale, parentCircle->transform.yWorldScale);
+	//childCircle->cs.setScale(childCircle->transform.xWorldScale, childCircle->transform.yWorldScale);
+
+	//parentCircle->rigidbody.SetAABB();
 	childCircle->rigidbody.SetAABB();
 
-	std::cout << "BL of child:  " << childCircle->rigidbody.bounds[0] << std::endl;
+	std::cout << "B child:  " << childCircle->rigidbody.bounds[0] << ", " 
+		<< childCircle->rigidbody.bounds[1] << std::endl;
 
 
 }

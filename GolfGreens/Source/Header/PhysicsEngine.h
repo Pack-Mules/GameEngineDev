@@ -52,16 +52,18 @@ public:
 
 private:
 	void CheckCollisions() {
-		for(Rigidbody* bodyA : rigidBodies.size-1) {
-			//wtf is happening here??
-			for(Rigidbody* bodyB : rigidBodies.GetRange(rigidBodies.IndexOf(bodyA), rigidBodies.Count - rigidBodies.IndexOf(bodyA))) {
+		for(Rigidbody* bodyA : rigidBodies) {
+			//original code was Rigidbody bodyB: 
+			//rigidBodies.GetRange(rigidBodies.IndexOf(bodyA), rigidBodies.Count - rigidBodies.IndexOf(bodyA))
+			//starting from a, compares everything. no code in c++ though
+			for(Rigidbody* bodyB : rigidBodies) {
 				if (&bodyA != &bodyB) {
 					CollisionPair pair = CollisionPair();
 					CollisionInfo colInfo = CollisionInfo();
 					pair.rigidBodyA = bodyA; pair.rigidBodyB = bodyB;
 
-					Vector2 distance = Vector2(bodyB->transform.x - bodyA->transform.x, 
-						bodyB->transform.y - bodyA->transform.y);
+					Vector2 distance = Vector2(bodyB->transform->x - bodyA->transform->x,
+						bodyB->transform->y - bodyA->transform->y);
 
 					Vector2 halfSizeA = (bodyA->aabb.tRight - bodyA->aabb.bLeft) / 2;
 					Vector2 halfSizeB = (bodyB->aabb.tRight - bodyB->aabb.bLeft) / 2;
@@ -70,10 +72,14 @@ private:
 
 					// Seperating Axis Theorem test
 					if (gap.x < 0 && gap.y < 0) {
-						if (collisions.find(pair) != collisions.end) {
-							std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
-							collisions.erase(it);
-						}
+
+						//It doesn't know here what it's trying to find or compare
+						//i.e. How should it compare it? How does it know they're the same??
+						/*if (collisions.find(pair) != collisions.end()) {
+						std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
+						collisions.erase(it);
+						}*/
+
 						//more horizontal dist
 						if (gap.x > gap.y) {
 							//body1 is to the right of body2
@@ -102,12 +108,12 @@ private:
 							}
 							colInfo.penetration = gap.y;
 						}
-						collisions.insert(std::pair<CollisionPair, CollisionInfo>(pair, colInfo));
+						//collisions.insert(std::make_pair(pair, colInfo));
 					}
-					else if (collisions.find(pair) != collisions.end) {
+					/*else if (collisions.find(pair) != collisions.end()) {
 						std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
 						collisions.erase(it);
-					}
+					}*/
 
 				}
 			}
@@ -115,36 +121,36 @@ private:
 	}
 
 	void ResolveCollisions() {
-		for(CollisionPair pair : collisions.key_comp) {
-			float minBounce = std::min(pair.rigidBodyA->bounciness, pair.rigidBodyB->bounciness);
-			float velAlongNormal = (pair.rigidBodyB->currentVelocity - pair.rigidBodyA->currentVelocity, collisions[pair].collisionNormal).dot;
-			if (velAlongNormal > 0) continue;
+		//for(CollisionPair pair : collisions.key_comp) {
+		//	float minBounce = std::min(pair.rigidBodyA->bounciness, pair.rigidBodyB->bounciness);
+		//	float velAlongNormal = (pair.rigidBodyB->currentVelocity - pair.rigidBodyA->currentVelocity, collisions[pair].collisionNormal).dot;
+		//	if (velAlongNormal > 0) continue;
 
-			float j = -(1 + minBounce) * velAlongNormal;
-			float invMassA, invMassB;
-			if (pair.rigidBodyA->mass == 0)
-				invMassA = 0;
-			else
-				invMassA = 1 / pair.rigidBodyA->mass;
+		//	float j = -(1 + minBounce) * velAlongNormal;
+		//	float invMassA, invMassB;
+		//	if (pair.rigidBodyA->mass == 0)
+		//		invMassA = 0;
+		//	else
+		//		invMassA = 1 / pair.rigidBodyA->mass;
 
-			if (pair.rigidBodyB->mass == 0)
-				invMassB = 0;
-			else
-				invMassB = 1 / pair.rigidBodyB->mass;
+		//	if (pair.rigidBodyB->mass == 0)
+		//		invMassB = 0;
+		//	else
+		//		invMassB = 1 / pair.rigidBodyB->mass;
 
-			j /= invMassA + invMassB;
+		//	j /= invMassA + invMassB;
 
-			Vector2 impulse = j * collisions[pair].collisionNormal;
+		//	Vector2 impulse = j * collisions[pair].collisionNormal;
 
-			// ... update velocities
+		//	// ... update velocities
 
-			pair.rigidBodyA->currentVelocity -= impulse;
-			if (pair.rigidBodyB->moveable)
-				pair.rigidBodyB->currentVelocity += impulse;
-			if (abs(collisions[pair].penetration) > 0.01f) {
-				PositionalCorrection(pair);
-			}
-		}
+		//	pair.rigidBodyA->currentVelocity -= impulse;
+		//	if (pair.rigidBodyB->moveable)
+		//		pair.rigidBodyB->currentVelocity += impulse;
+		//	if (abs(collisions[pair].penetration) > 0.01f) {
+		//		PositionalCorrection(pair);
+		//	}
+		//}
 	}
 
 	/*
@@ -154,7 +160,7 @@ private:
 	* ______________ Try taking it out and see what happens
 	*/
 	void PositionalCorrection(CollisionPair c) {
-		const float percent = 0.2f;
+		/*const float percent = 0.2f;
 
 		float invMassA, invMassB;
 		if (c.rigidBodyA->mass == 0)
@@ -169,19 +175,20 @@ private:
 
 		Vector2 correction = ((collisions[c].penetration / (invMassA + invMassB)) * percent) * -collisions[c].collisionNormal;
 
-		Vector2 temp = Vector2(c.rigidBodyA->transform.x, c.rigidBodyA->transform.y);
+		Vector2 temp = Vector2(c.rigidBodyA->transform->x, c.rigidBodyA->transform->y);
 		temp -= invMassA * correction;
-		c.rigidBodyA->transform.SetPosition(temp);
+		c.rigidBodyA->transform->SetPosition(temp);
 
-		temp = Vector2(c.rigidBodyB->transform.x, c.rigidBodyB->transform.y);
+		temp = Vector2(c.rigidBodyB->transform->x, c.rigidBodyB->transform->y);
 		temp += invMassB * correction;
-		c.rigidBodyB->transform.SetPosition(temp);
+		c.rigidBodyB->transform->SetPosition(temp);*/
 	}
 
+	public:
 	void UpdatePhysics(float dT) {
 		CheckCollisions();
-		ResolveCollisions();
-		IntegrateBodies(dT);
+		//ResolveCollisions();
+		//IntegrateBodies(dT);
 	}
 
 };

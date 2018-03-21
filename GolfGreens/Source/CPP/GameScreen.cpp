@@ -2,10 +2,13 @@
 #include "GameScreen.h"
 #include "Screen.h"
 #include "GameObject.h"
+#include "PhysicsEngine.h"
+
 #include <iostream>
 #include <Windows.h>
 #include "SFML\Audio.hpp"
 
+PhysicsEngine* physics;
 
 GameScreen::GameScreen() {
 	LoadAssets();
@@ -58,7 +61,7 @@ void GameScreen::Update(sf::RenderWindow &win) {
 	std::cout << "B child:  " << childCircle->rigidbody.bounds[0] << ", " 
 		<< childCircle->rigidbody.bounds[1] << std::endl;
 
-
+	physics->UpdatePhysics(dt);
 }
 
 void GameScreen::Draw(sf::RenderWindow &win) {
@@ -71,9 +74,14 @@ void GameScreen::LoadAssets() {
 }
 
 void GameScreen::LoadObjects() {
+	physics = new PhysicsEngine();
+
 	scene = new GameObject();
 	parentCircle = new GameObject();
 	childCircle = new GameObject();
+
+	physics->AddRigidBody(&parentCircle->rigidbody);
+	physics->AddRigidBody(&childCircle->rigidbody);
 
 	scene->AddChild(parentCircle);
 	parentCircle->AddChild(childCircle);

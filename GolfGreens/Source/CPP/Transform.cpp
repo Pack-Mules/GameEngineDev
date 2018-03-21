@@ -27,5 +27,13 @@ void Transform::SetScale(Vector3 vector) {
 	Scale[5] = vector.y;
 	Scale[10] = vector.z;
 	UpdateScale();
+}
 
+void Transform::Translate(Vector3 vec) {
+	Position.translate(vec); UpdateXYZ();
+}
+
+void Transform::Translate(Vector2 vec) {
+	Vector3 newVec = Vector3(vec.x, vec.y, 0);
+	Translate(newVec);
 }

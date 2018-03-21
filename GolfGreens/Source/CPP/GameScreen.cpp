@@ -95,7 +95,7 @@ void GameScreen::LoadObjects() {
 	childCircleUp = true;
 	LoadedObjects = true;
 
-	if (parentCircle->rigidbody.gameObject == parentCircle)
-		std::cout << "true\n";
+	//if (parentCircle->rigidbody.gameObject == parentCircle)
+	//	std::cout << "true\n";
 	
 }

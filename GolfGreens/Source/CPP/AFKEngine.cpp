@@ -69,7 +69,6 @@ void AFKEngine::Start() {
 
 	LoadAssets();
 	LoadObjects();
-
 	//Audio started
 	AFKEngine::playMusic("Madeon - Pop Culture.flac");
 

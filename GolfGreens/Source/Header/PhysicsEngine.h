@@ -42,6 +42,7 @@ public:
 	}
 	void AddRigidBody(Rigidbody* rigidBody) {
 		rigidBodies.push_back(rigidBody);
+		std::cout << "Added rigidbody: " << &rigidBody << std::endl;
 	}
 
 	void IntegrateBodies(float dT) {
@@ -121,9 +122,12 @@ private:
 	}
 
 	void ResolveCollisions() {
-		//for(CollisionPair pair : collisions.key_comp) {
+		//for (const auto& it : collisions) {
+		//	CollisionPair pair = it;
 		//	float minBounce = std::min(pair.rigidBodyA->bounciness, pair.rigidBodyB->bounciness);
-		//	float velAlongNormal = (pair.rigidBodyB->currentVelocity - pair.rigidBodyA->currentVelocity, collisions[pair].collisionNormal).dot;
+		//	
+		//	float velAlongNormal = (pair.rigidBodyB->currentVelocity - pair.rigidBodyA->currentVelocity).dot(collisions[pair].collisionNormal);
+
 		//	if (velAlongNormal > 0) continue;
 
 		//	float j = -(1 + minBounce) * velAlongNormal;
@@ -160,7 +164,7 @@ private:
 	* ______________ Try taking it out and see what happens
 	*/
 	void PositionalCorrection(CollisionPair c) {
-		/*const float percent = 0.2f;
+	/*	const float percent = 0.2f;
 
 		float invMassA, invMassB;
 		if (c.rigidBodyA->mass == 0)
@@ -187,8 +191,12 @@ private:
 	public:
 	void UpdatePhysics(float dT) {
 		CheckCollisions();
-		//ResolveCollisions();
-		//IntegrateBodies(dT);
+		ResolveCollisions();
+		IntegrateBodies(dT);
 	}
 
 };
+
+
+
+//dot product

@@ -29,9 +29,8 @@ public:
 
 	Matrix4 GetScale() { return Scale; }
 
-	void Translate(Vector3 vec) {
-		Position.translate(vec); UpdateXYZ();
-	}
+	void Translate(Vector3 vec);
+	void Translate(Vector2 vec);
 
 	void ChangeScale(Vector3 vec) {
 		Scale.scale(vec.x, vec.y, vec.z); UpdateScale();

@@ -26,7 +26,7 @@ public:
 	float mass = 1.0f;                             // Mass of the RigidBody
 	float bounciness = 1;                        // The bounciness factor (value between 0 and 1, 0 being no bounce, and 1 being super bouncy!)
 	bool obeysGravity = true;                    // Whether or not this body obeys gravity
-	Vector2 gravity = Vector2(0, -9.8f);     // The gravity vector applied to this body
+	Vector2 gravity = Vector2(0, -0.0f);     // The gravity vector applied to this body
 
 	Vector2 currentVelocity;                     // The current velocity the body is moving at
 	Vector2 maxVelocity = Vector2(10.0f, 10.0f); // The maximum allowed velocity for this object
@@ -115,9 +115,9 @@ public:
 
 		currentVelocity += acceleration * dT;
 
-		Vector2 temp = Vector2(transform->x, transform->y);
-		temp += currentVelocity * dT;
-		transform->SetPosition(temp);
+		//Vector2 temp = Vector2(transform->x, transform->y);
+		//temp += currentVelocity * dT;
+		transform->Translate(currentVelocity*dT);
 		SetAABB();
 
 		totalForces = Vector2(0.0f, 0.0f);

@@ -22,9 +22,8 @@ public:
 	GameObject *scene;
 	GameObject *FirstCircle;
 	GameObject *SecondCircle;
+	GameObject *ThirdCircle;
 
-	bool parentCircleRight;
-	bool childCircleUp;
 
 	//objects
 	//sf::CircleShape parentCircleShape;

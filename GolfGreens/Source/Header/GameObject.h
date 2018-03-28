@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Rigidbody.h"
 #include "Component.h"
+#include <string>
 #include <list>
 
 
@@ -36,6 +37,10 @@ public:
 	{
 		target.draw(sprite);
 	}
+
+
+	std::string name;
+	int id;
 
 protected:
 

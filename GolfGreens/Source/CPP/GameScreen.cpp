@@ -17,56 +17,19 @@ GameScreen::GameScreen() {
 
 void GameScreen::Update(sf::RenderWindow &win) {
 	float dt = 0.01f;// &clock.getElapsedTime().asMilliseconds;
-	parentCircle->Update(dt);
-	childCircle->Update(dt);
+	FirstCircle->Update(dt);
+	SecondCircle->Update(dt);
 	//moving circle
-	if (parentCircle->transform.x <= 0 && parentCircleRight == false)
-		parentCircleRight = true;
-	else if (parentCircle->transform.x + parentCircle->cs.getLocalBounds().width >= win.getSize().x
-		&& parentCircleRight == true)
-		parentCircleRight = false;
+	std::cout << FirstCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << FirstCircle->rigidbody.aabb.tRight << std::endl;
 
-	if (childCircle->transform.y <= 0)
-		childCircleUp = true;
-	else if (childCircle->transform.y >= 200)
-		childCircleUp = false;
-
-	if (parentCircleRight)
-	{
-	
-		parentCircle->transform.Translate(Vector3(0.1f, 0, 0));
-		parentCircle->transform.ChangeScale(Vector3(1.0f * 1.0001f, 1.0f * 1.0001f, 1.0f * 1.0001f));
-	}
-	else
-	{
-		parentCircle->RemoveChild(childCircle);
-		parentCircle->transform.Translate(Vector3(-0.1f, 0, 0));
-		parentCircle->transform.ChangeScale(Vector3(1.0f / 1.0001f, 1.0f / 1.0001f, 1.0f / 1.0001f));
-	}
-
-	if (childCircleUp)
-		childCircle->transform.Translate(Vector3(0, 0.05f, 0));
-	else
-		childCircle->transform.Translate(Vector3(0, -0.05f, 0));
-
-	parentCircle->cs.setPosition(parentCircle->transform.xWorld, parentCircle->transform.yWorld);
-	childCircle->cs.setPosition(childCircle->transform.xWorld, childCircle->transform.yWorld);
-
-	//parentCircle->cs.setScale(parentCircle->transform.xWorldScale, parentCircle->transform.yWorldScale);
-	//childCircle->cs.setScale(childCircle->transform.xWorldScale, childCircle->transform.yWorldScale);
-
-	//parentCircle->rigidbody.SetAABB();
-	childCircle->rigidbody.SetAABB();
-
-	std::cout << "B child:  " << childCircle->rigidbody.bounds[0] << ", " 
-		<< childCircle->rigidbody.bounds[1] << std::endl;
+	std::cout << SecondCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << SecondCircle->rigidbody.aabb.tRight << std::endl;
 
 	physics->UpdatePhysics(dt);
 }
 
 void GameScreen::Draw(sf::RenderWindow &win) {
-	win.draw(parentCircle->cs);
-	win.draw(childCircle->cs);
+	win.draw(FirstCircle->cs);
+	win.draw(SecondCircle->cs);
 }
 
 void GameScreen::LoadAssets() {
@@ -77,22 +40,29 @@ void GameScreen::LoadObjects() {
 	physics = new PhysicsEngine();
 
 	scene = new GameObject();
-	parentCircle = new GameObject();
-	childCircle = new GameObject();
+	FirstCircle = new GameObject();
+	SecondCircle = new GameObject();
 
-	physics->AddRigidBody(&parentCircle->rigidbody);
-	physics->AddRigidBody(&childCircle->rigidbody);
+	scene->name = "Scene";
+	FirstCircle->name = "First";
+	SecondCircle->name = "Second";
 
-	scene->AddChild(parentCircle);
-	parentCircle->AddChild(childCircle);
+	physics->AddRigidBody(&FirstCircle->rigidbody);
+	physics->AddRigidBody(&SecondCircle->rigidbody);
 
-	parentCircle->cs.setRadius(100.0f);
-	parentCircle->cs.setFillColor(sf::Color::Green);
-	parentCircleRight = true;
+	scene->AddChild(FirstCircle);
+	scene->AddChild(SecondCircle);
 
-	childCircle->cs.setRadius(20.0f);
-	childCircle->cs.setFillColor(sf::Color::Blue);
-	childCircleUp = true;
+	FirstCircle->cs.setRadius(50.0f);
+	FirstCircle->cs.setFillColor(sf::Color::Green);
+	FirstCircle->rigidbody.currentVelocity = Vector2(20, 0);
+
+	SecondCircle->cs.setRadius(50.0f);
+	SecondCircle->cs.setFillColor(sf::Color::Blue);
+	SecondCircle->transform.SetPosition(Vector2(500, 0));
+	//SecondCircle->rigidbody.currentVelocity = Vector2(-20, 0);
+
+
 	LoadedObjects = true;
 
 	//if (parentCircle->rigidbody.gameObject == parentCircle)

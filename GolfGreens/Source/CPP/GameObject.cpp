@@ -2,11 +2,13 @@
 
 GameObject::GameObject() {
 	parent = NULL;
+	id = rand() % 99999;
+
+	rigidbody.id = this->id;
 	rigidbody.gameObject = this;
 	rigidbody.transform = &transform;
 	rigidbody.cs = &cs;
 	Components.push_back(&transform);
-
 }
 
 GameObject::~GameObject() {
@@ -41,7 +43,15 @@ void GameObject::RemoveChild(GameObject* s) {
 }
 
 void GameObject::Update(float msec) {
-	//Updating world position
+
+
+	//updating position with rigidbody
+
+	//our sprite
+	cs.setPosition(transform.xWorld, transform.yWorld);
+
+
+	//Updating world position values
 	if (parent) { //This node has a parent...
 		//setting world position
 		transform.SetWorldPosition(parent->transform.GetWorldPosition() * transform.GetPosition());

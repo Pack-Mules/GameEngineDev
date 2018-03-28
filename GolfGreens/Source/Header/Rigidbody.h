@@ -34,7 +34,7 @@ public:
 	bool grounded;
 	bool moveable = true;
 
-	Vector2 bounds[2];
+	//Vector2 bounds[2];
 
 	
 
@@ -66,15 +66,17 @@ public:
 
 	
 	void SetAABB()
-	// TODO: wtf is bounds in sfml?
 	{
-		bounds[0] = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height );
-		bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
+		//bounds[0] = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
+
+
+		//bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
 		
+		aabb.bLeft = Vector2(transform->xWorld, transform->yWorld);
+		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld + cs->getGlobalBounds().height);
 
-
-		//Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
-		/*
+		/*Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
+		
 		Renderer renderer = GetComponent<Renderer>();
 
 		if (renderer)
@@ -84,12 +86,12 @@ public:
 
 		aabb.bLeft = new Vector2(bound.center.x - bound.extents.x, bound.center.y - bound.extents.y);
 		aabb.tRight = new Vector2(bound.center.x + bound.extents.x, bound.center.y + bound.extents.y);
-		
+		*/
 	}
 
 	void Start() {
 		SetAABB();
-		engine = GameObject.FindWithTag("PhysicsEngine").GetComponent<PhysicsEngine>();
+		/*engine = GameObject.FindWithTag("PhysicsEngine").GetComponent<PhysicsEngine>();
 
 		engine.AddRigidBody(this);
 		*/
@@ -114,6 +116,12 @@ public:
 			acceleration = Vector2(0.0f, 0.0);
 
 		currentVelocity += acceleration * dT;
+
+		float frictionEffect = 1.0f;// 0.998f; //1 for zero friction
+		currentVelocity *= frictionEffect;
+
+		if (currentVelocity.length() < 0.01f)
+			currentVelocity = Vector2(0,0);
 
 		//Vector2 temp = Vector2(transform->x, transform->y);
 		//temp += currentVelocity * dT;

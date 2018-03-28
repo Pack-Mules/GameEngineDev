@@ -20,8 +20,8 @@ public:
 
 public:
 	GameObject *scene;
-	GameObject *parentCircle;
-	GameObject *childCircle;
+	GameObject *FirstCircle;
+	GameObject *SecondCircle;
 
 	bool parentCircleRight;
 	bool childCircleUp;

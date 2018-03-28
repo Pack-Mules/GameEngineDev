@@ -127,7 +127,12 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
-		LoadObjects();
+		if (!isReset)
+		{
+			LoadObjects();
+			isReset = true;
+			std::cout << "Balls reset." << std::endl;
+		}
 	}
 
 
@@ -138,6 +143,7 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
+			isReset = false;
 			if (isShooting)
 			{
 				mousePosI = sf::Mouse::getPosition(win);
@@ -155,7 +161,7 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 		}
 		else if (isShooting)
 		{
-			shotVel = sf::Vector2i(shotLine[1].position - shotLine[0].position) / 3;
+			shotVel = sf::Vector2i(shotLine[0].position - shotLine[1].position) / 3;
 			std::cout << "Shot Velocity = " << shotVel.x << ", " << shotVel.y << std::endl;
 			FirstCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
 			isShooting = false;

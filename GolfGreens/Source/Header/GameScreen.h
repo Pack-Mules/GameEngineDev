@@ -31,6 +31,7 @@ public:
 
 	sf::Vertex shotLine[2];
 	bool isShooting;
+	bool isReset;
 	sf::Vector2i shotVel;
 
 

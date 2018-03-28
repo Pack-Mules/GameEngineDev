@@ -99,7 +99,7 @@ void GameScreen::LoadObjects() {
 
 	ImmovableCircle->cs.setRadius(40.0f);
 	ImmovableCircle->cs.setFillColor(sf::Color::Black);
-	ImmovableCircle->transform.SetPosition(Vector2(100, 500));
+	ImmovableCircle->transform.SetPosition(Vector2(rand() % 944, rand() % 688));
 	ImmovableCircle->rigidbody.currentVelocity = Vector2(0, 0);
 	ImmovableCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 	//ImmovableCircle->rigidbody.moveable = false;

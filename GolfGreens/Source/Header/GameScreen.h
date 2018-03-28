@@ -20,10 +20,10 @@ public:
 
 	void CheckHole();
 
-	
+
 
 public:
-	GameObject *scene;
+	GameObject * scene;
 	GameObject *FirstCircle;
 	GameObject *SecondCircle;
 	GameObject *ThirdCircle;

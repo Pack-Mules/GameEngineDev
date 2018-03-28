@@ -3,11 +3,11 @@
 #include "Matrices.h"
 #include "Component.h"
 
-class Transform: public Component {
+class Transform : public Component {
 
 
 
-public: 
+public:
 
 	Transform() { }
 
@@ -35,13 +35,14 @@ public:
 	void ChangeScale(Vector3 vec) {
 		Scale.scale(vec.x, vec.y, vec.z); UpdateScale();
 	}
-	
+
 
 
 private:
-	void UpdateXYZ() { x = Position[12]; y = Position[13]; z = Position[14]; 
-				xWorld = WorldPosition[12]; yWorld = WorldPosition[13]; zWorld = WorldPosition[14];
-						}
+	void UpdateXYZ() {
+		x = Position[12]; y = Position[13]; z = Position[14];
+		xWorld = WorldPosition[12]; yWorld = WorldPosition[13]; zWorld = WorldPosition[14];
+	}
 
 	void UpdateScale() {
 		xScale = Scale[0]; yScale = Scale[5]; zScale = Scale[10];
@@ -61,7 +62,7 @@ public:
 	float xScale;
 	float yScale;
 	float zScale;
-	
+
 	float xWorldScale;
 	float yWorldScale;
 	float zWorldScale;

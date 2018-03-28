@@ -29,7 +29,7 @@ private:
 
 public:
 	bool IsGrounded(Rigidbody *rigidBody) {
-		for(Rigidbody *rb : rigidBodies) {
+		for (Rigidbody *rb : rigidBodies) {
 			if (&rb != &rigidBody) {
 				if (rigidBody->aabb.bLeft.x < rb->aabb.tRight.x
 					&& rigidBody->aabb.tRight.x > rb->aabb.bLeft.x
@@ -52,18 +52,18 @@ public:
 	}
 
 	void IntegrateBodies(float dT) {
-		for(Rigidbody *rb : rigidBodies) {
+		for (Rigidbody *rb : rigidBodies) {
 			rb->Integrate(dT);
 		}
 	}
 
 private:
 	void CheckCollisions() {
-		for(Rigidbody* bodyA : rigidBodies) {
+		for (Rigidbody* bodyA : rigidBodies) {
 			//original code was Rigidbody bodyB: 
 			//rigidBodies.GetRange(rigidBodies.IndexOf(bodyA), rigidBodies.Count - rigidBodies.IndexOf(bodyA))
 			//starting from a, compares everything. no code in c++ though
-			for(Rigidbody* bodyB : rigidBodies) {
+			for (Rigidbody* bodyB : rigidBodies) {
 				if (bodyA->id != bodyB->id) {
 					int pairID = bodyA->id * 10 + bodyB->id * 10;
 					CollisionPair pair = CollisionPair();
@@ -74,7 +74,7 @@ private:
 
 					//RECTANGLE-RECTANGLE COLLISION
 					if (bodyA->shape == Rigidbody::Shape::Rectangle && bodyB->shape == Rigidbody::Shape::Rectangle) {
-						Vector2 distance = Vector2(bodyB->transform->xWorld - bodyA->transform->xWorld, 
+						Vector2 distance = Vector2(bodyB->transform->xWorld - bodyA->transform->xWorld,
 							bodyB->transform->yWorld - bodyA->transform->yWorld);
 
 						Vector2 halfSizeA = (bodyA->aabb.tRight - bodyA->aabb.bLeft) / 2;
@@ -87,8 +87,8 @@ private:
 
 							//original code
 							//if (collisions.find(pair) != collisions.end()) {
-								//std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
-								//collisions.erase(it);
+							//std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
+							//collisions.erase(it);
 							//}
 							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
 							for (it = collisions.begin(); it != collisions.end(); it++) {
@@ -132,8 +132,8 @@ private:
 						/*old code c# unity
 
 						else if (collisions.find(pair) != collisions.end()) {
-							std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
-							collisions.erase(it);
+						std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
+						collisions.erase(it);
 						}*/
 						else {
 							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
@@ -158,7 +158,7 @@ private:
 						float radii = radiusA + radiusB;
 						Vector2 distance = Vector2((bodyB->transform->xWorld + bodyB->cs->getGlobalBounds().width / 2) - (bodyA->transform->xWorld + bodyA->cs->getGlobalBounds().width / 2),
 							(bodyB->transform->yWorld + bodyB->cs->getGlobalBounds().height / 2) - (bodyA->transform->yWorld + bodyA->cs->getGlobalBounds().height / 2));
-						if ((distance.x*distance.x)+(distance.y*distance.y) <= (radii*radii)) {
+						if ((distance.x*distance.x) + (distance.y*distance.y) <= (radii*radii)) {
 							//erase old reference to map
 							//std::cout << "COLLISION" << std::endl;
 							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
@@ -171,12 +171,12 @@ private:
 
 							colInfo.collisionNormal = distance / sqrt((distance.x*distance.x) + (distance.y*distance.y));
 							colInfo.penetration = radii - distance.length();
-							
+
 
 							//pass collision normal and penetration info
 
 							collisions.insert(std::make_pair(pairID, std::make_pair(pair, colInfo)));
-						} 
+						}
 						else {
 							//no collision
 							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
@@ -262,7 +262,7 @@ private:
 		c.rigidBodyB->transform->SetPosition(temp);
 	}
 
-	public:
+public:
 	void UpdatePhysics(float dT) {
 		CheckCollisions();
 		ResolveCollisions();

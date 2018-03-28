@@ -49,6 +49,7 @@ bool AFKEngine::Initialize(int argc, char *argv[]) {
 		std::cout << "No Joystick detected" << std::endl;
 
 	std::cout << "\n\n\n\n";
+
 	return true;
 
 

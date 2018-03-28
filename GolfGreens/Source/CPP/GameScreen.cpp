@@ -93,7 +93,7 @@ void GameScreen::LoadObjects() {
 
 	ThirdCircle->cs.setRadius(20.0f);
 	ThirdCircle->cs.setFillColor(sf::Color::Green);
-	ThirdCircle->transform.SetPosition(Vector2(500, 100));
+	ThirdCircle->transform.SetPosition(Vector2(500, 300));
 	ThirdCircle->rigidbody.currentVelocity = Vector2(0, 0);
 	ThirdCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
@@ -118,8 +118,8 @@ void GameScreen::LoadObjects() {
 	//if (parentCircle->rigidbody.gameObject == parentCircle)
 	//	std::cout << "true\n";
 
-	
-	
+
+
 }
 
 void GameScreen::GetInput(sf::RenderWindow &win)
@@ -129,6 +129,8 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 	{
 		LoadObjects();
 	}
+
+
 	if (FirstCircle)
 	{
 		sf::Vector2i mousePosI;
@@ -158,8 +160,31 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 			FirstCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
 			isShooting = false;
 		}
+
+		if (SecondCircle)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			{
+				if (SecondCircle->parent == scene)
+				{
+					scene->RemoveChild(SecondCircle);
+					FirstCircle->AddChild(SecondCircle);
+				}
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			{
+				if (SecondCircle->parent == FirstCircle)
+				{
+					FirstCircle->RemoveChild(SecondCircle);
+					scene->AddChild(SecondCircle);
+				}
+			}
+		}
+
+
 	}
-	
+
 }
 
 void GameScreen::CheckHole()
@@ -207,6 +232,6 @@ void GameScreen::CheckHole()
 		}
 	}
 
-	
+
 
 }

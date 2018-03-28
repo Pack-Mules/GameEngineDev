@@ -21,7 +21,7 @@ public:
 
 
 	//the other transform component of the gameObject
-	Transform* transform; 
+	Transform* transform;
 	sf::CircleShape *cs;
 
 	float frictionVal = 1.0f;
@@ -38,7 +38,7 @@ public:
 
 	//Vector2 bounds[2];
 
-	
+
 
 	struct AABB
 	{
@@ -48,7 +48,7 @@ public:
 
 	AABB aabb;
 
-private: 
+private:
 	Vector2 totalForces;
 
 
@@ -66,24 +66,24 @@ public:
 		totalForces = Vector2(0.0f, 0.0f);
 	}
 
-	
+
 	void SetAABB()
 	{
 		//bounds[0] = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
 
 
 		//bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
-		
+
 		aabb.bLeft = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
-		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld );
+		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
 
 		/*Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
-		
+
 		Renderer renderer = GetComponent<Renderer>();
 
 		if (renderer)
 		{
-			bound = renderer.bounds;
+		bound = renderer.bounds;
 		}
 
 		aabb.bLeft = new Vector2(bound.center.x - bound.extents.x, bound.center.y - bound.extents.y);
@@ -98,7 +98,7 @@ public:
 		engine.AddRigidBody(this);
 		*/
 	}
-	
+
 	void Integrate(float dT) {
 		/// 
 		/// If this object is affected by gravity and not grounded, add gravity force
@@ -124,37 +124,37 @@ public:
 
 		//slowing down
 		if (currentVelocity.length() < 0.01f)
-			currentVelocity = Vector2(0,0);
+			currentVelocity = Vector2(0, 0);
 
-		
+
 
 
 		//Vector2 temp = Vector2(transform->x, transform->y);
 		//temp += currentVelocity * dT;
 		transform->Translate(currentVelocity*dT);
 		//moving
-		
+
 		SetAABB();
 		//updating new bounding box
 
 		//if hit edges...
-		if(aabb.bLeft.x < 0)
+		if (aabb.bLeft.x < 0)
 			currentVelocity.x = abs(currentVelocity.x);
-		if(aabb.bLeft.y < 0)
+		if (aabb.bLeft.y < 0)
 			currentVelocity.y = abs(currentVelocity.y);
 
 		if (aabb.tRight.x > AFKEngine::ScreenWidth)
 			currentVelocity.x = -abs(currentVelocity.x);
 		if (aabb.tRight.y > AFKEngine::ScreenHeight)
 			currentVelocity.y = -abs(currentVelocity.y);
-		
+
 
 
 		totalForces = Vector2(0.0f, 0.0f);
 	}
 
 	bool IsGrounded() {
-		
+
 		return false;
 	}
 

@@ -12,7 +12,7 @@ GameObject::GameObject() {
 }
 
 GameObject::~GameObject() {
-	for (unsigned int i = 0; i< children.size(); i++){
+	for (unsigned int i = 0; i< children.size(); i++) {
 		delete children[i];
 	}
 }
@@ -21,11 +21,16 @@ GameObject::~GameObject() {
 void GameObject::AddChild(GameObject* s) {
 	//if child has a parent, then we remove their link
 	if (s->parent != NULL) {
+
 		s->parent->RemoveChild(s);
 	}
 
 	//add the child to the gameobject children array
 	children.push_back(s);
+	//Vector3 tempPos = Vector3(s->transform.xWorld, s->transform.yWorld, s->transform.zWorld);
+	//Vector3 tempScale = Vector3(s->transform.xWorldScale, s->transform.yWorldScale, s->transform.zWorldScale);
+	s->transform.SetPosition(Vector3(s->transform.xWorld - this->transform.xWorld, s->transform.yWorld - this->transform.yWorld, s->transform.zWorld - this->transform.zWorld));
+	s->transform.SetScale(Vector3(s->transform.xWorldScale - this->transform.xWorldScale, s->transform.yWorldScale - this->transform.yWorldScale, s->transform.zWorldScale - this->transform.zWorldScale));
 	s->parent = this;
 }
 
@@ -42,6 +47,7 @@ void GameObject::RemoveChild(GameObject* s) {
 	}
 }
 
+
 void GameObject::Update(float msec) {
 
 
@@ -53,7 +59,7 @@ void GameObject::Update(float msec) {
 
 	//Updating world position values
 	if (parent) { //This node has a parent...
-		//setting world position
+				  //setting world position
 		transform.SetWorldPosition(parent->transform.GetWorldPosition() * transform.GetPosition());
 		transform.SetWorldScale(parent->transform.GetWorldScale() * transform.GetScale());
 	}

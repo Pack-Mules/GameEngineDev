@@ -20,9 +20,8 @@ void GameScreen::Update(sf::RenderWindow &win) {
 	FirstCircle->Update(dt);
 	SecondCircle->Update(dt);
 	//moving circle
-	std::cout << FirstCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << FirstCircle->rigidbody.aabb.tRight << std::endl;
-
-	std::cout << SecondCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << SecondCircle->rigidbody.aabb.tRight << std::endl;
+	//std::cout << FirstCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << FirstCircle->rigidbody.aabb.tRight << std::endl;
+	//std::cout << SecondCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << SecondCircle->rigidbody.aabb.tRight << std::endl;
 
 	physics->UpdatePhysics(dt);
 }
@@ -55,14 +54,15 @@ void GameScreen::LoadObjects() {
 
 	FirstCircle->cs.setRadius(50.0f);
 	FirstCircle->cs.setFillColor(sf::Color::Green);
+	FirstCircle->transform.SetPosition(Vector2(30, 30));
 	FirstCircle->rigidbody.currentVelocity = Vector2(20, 0);
 	FirstCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
 	SecondCircle->cs.setRadius(50.0f);
 	SecondCircle->cs.setFillColor(sf::Color::Blue);
-	SecondCircle->transform.SetPosition(Vector2(500, 0));
+	SecondCircle->transform.SetPosition(Vector2(500, 60));
+	SecondCircle->rigidbody.currentVelocity = Vector2(-20, 0);
 	SecondCircle->rigidbody.shape = Rigidbody::Shape::Circle;
-	//SecondCircle->rigidbody.currentVelocity = Vector2(-20, 0);
 
 
 	LoadedObjects = true;

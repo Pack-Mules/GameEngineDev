@@ -65,79 +65,125 @@ private:
 					CollisionInfo colInfo = CollisionInfo();
 					pair.rigidBodyA = bodyA; pair.rigidBodyB = bodyB;
 
-					Vector2 distance = Vector2(bodyB->transform->x - bodyA->transform->x,
-						bodyB->transform->y - bodyA->transform->y);
 
-					Vector2 halfSizeA = (bodyA->aabb.tRight - bodyA->aabb.bLeft) / 2;
-					Vector2 halfSizeB = (bodyB->aabb.tRight - bodyB->aabb.bLeft) / 2;
 
-					Vector2 gap = Vector2(abs(distance.x), abs(distance.y)) - (halfSizeA + halfSizeB);
-					//std::cout << "gap is " << gap.x << ", " << gap.y << std::endl;
+					//RECTANGLE-RECTANGLE COLLISION
+					if (bodyA->shape == Rigidbody::Shape::Rectangle && bodyB->shape == Rigidbody::Shape::Rectangle) {
+						Vector2 distance = Vector2(bodyB->transform->xWorld - bodyA->transform->xWorld, 
+							bodyB->transform->yWorld - bodyA->transform->yWorld);
 
-					// Seperating Axis Theorem test
-					if (gap.x < 0 && gap.y < 0) {
-						
-						//original code
-						//if (collisions.find(pair) != collisions.end()) {
-							//std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
-							//collisions.erase(it);
-						//}
-						std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
-						for (it = collisions.begin(); it != collisions.end(); it++){
-							if (it->first == pairID) {
-								collisions.erase(it);
-								break;
+						Vector2 halfSizeA = (bodyA->aabb.tRight - bodyA->aabb.bLeft) / 2;
+						Vector2 halfSizeB = (bodyB->aabb.tRight - bodyB->aabb.bLeft) / 2;
+
+						Vector2 gap = Vector2(abs(distance.x), abs(distance.y)) - (halfSizeA + halfSizeB);
+
+						// Seperating Axis Theorem test
+						if (gap.x < 0 && gap.y < 0) {
+
+							//original code
+							//if (collisions.find(pair) != collisions.end()) {
+								//std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
+								//collisions.erase(it);
+							//}
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
 							}
-						}
 
-						//more horizontal dist
-						if (gap.x > gap.y) {
-							std::cout << "COLLISION" << std::endl;
-							//body1 is to the right of body2
-							if (distance.x > 0) {
-								colInfo.collisionNormal = Vector2(1, 0);
-								// ... Update collision normal
+							//more horizontal dist
+							if (gap.x > gap.y) {
+								//body1 is to the right of body2
+								if (distance.x > 0) {
+									colInfo.collisionNormal = Vector2(1, 0);
+									// ... Update collision normal
+								}
+								//body1 is to the left of body2
+								else {
+									colInfo.collisionNormal = Vector2(-1, 0);
+									// ... Update collision normal
+								}
+								colInfo.penetration = gap.x;
 							}
-							//body1 is to the left of body2
+							//more vertical distance
 							else {
-								colInfo.collisionNormal = Vector2(-1, 0);
-								// ... Update collision normal
+								//body1 is above body2
+								if (distance.y > 0) {
+									colInfo.collisionNormal = Vector2(0, 1);
+									// ... Update collision normal
+								}
+								//body1 is below body2
+								else {
+									colInfo.collisionNormal = Vector2(0, -1);
+									// ... Update collision normal
+								}
+								colInfo.penetration = gap.y;
 							}
-							colInfo.penetration = gap.x;
+
+							collisions.insert(std::make_pair(pairID, std::make_pair(pair, colInfo)));
 						}
-						//more vertical distance
+						/*old code c# unity
+
+						else if (collisions.find(pair) != collisions.end()) {
+							std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
+							collisions.erase(it);
+						}*/
 						else {
-							//body1 is above body2
-							if (distance.y > 0) {
-								colInfo.collisionNormal = Vector2(0, 1);
-								// ... Update collision normal
-							}
-							//body1 is below body2
-							else {
-								colInfo.collisionNormal = Vector2(0, -1);
-								// ... Update collision normal
-							}
-							colInfo.penetration = gap.y;
-						}
-
-						collisions.insert(std::make_pair(pairID, std::make_pair(pair, colInfo)));
-					}
-					/*old code c# unity
-					
-					else if (collisions.find(pair) != collisions.end()) {
-						std::map<CollisionPair, CollisionInfo>::iterator it = collisions.find(pair);
-						collisions.erase(it);
-					}*/
-					else {
-						std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
-						for (it = collisions.begin(); it != collisions.end(); it++) {
-							if (it->first == pairID) {
-								collisions.erase(it);
-								break;
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
 							}
 						}
 					}
+					//CIRCLE-CIRCLE COLLISION
+					else if (bodyA->shape == Rigidbody::Shape::Circle && bodyB->shape == Rigidbody::Shape::Circle) {
+						//reference: cgp.wikidot.com/circle-to-circle-collision-detection for initial detection
+						//reference: https://www.gamedev.net/forums/topic/488102-circlecircle-collision-response for normal + pen
+						//halfsizeA x or y= radius of circle1, no distortion
+						//halfsizeB x or y= radius of circle2, no distortion
+						//gap = remaining dist total
+						float radiusA = (bodyA->aabb.tRight.x - bodyA->aabb.bLeft.x) / 2;
+						float radiusB = (bodyB->aabb.tRight.x - bodyB->aabb.bLeft.x) / 2;
 
+						float radii = radiusA + radiusB;
+						Vector2 distance = Vector2(bodyB->transform->xWorld - bodyA->transform->xWorld,
+							bodyB->transform->yWorld - bodyA->transform->yWorld);
+						if ((distance.x*distance.x)+(distance.y*distance.y) <= (radii*radii)) {
+							//erase old reference to map
+							std::cout << "COLLISION" << std::endl;
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
+							}
+
+							colInfo.collisionNormal = distance / sqrt((distance.x*distance.x) + (distance.y*distance.y));
+							colInfo.penetration = radii - distance.length();
+							
+
+							//pass collision normal and penetration info
+
+							collisions.insert(std::make_pair(pairID, std::make_pair(pair, colInfo)));
+						} 
+						else {
+							//no collision
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
+							}
+						}
+
+					}
 				}
 			}
 		}

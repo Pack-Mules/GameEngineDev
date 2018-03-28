@@ -93,7 +93,7 @@ void GameScreen::LoadObjects() {
 
 	ThirdCircle->cs.setRadius(20.0f);
 	ThirdCircle->cs.setFillColor(sf::Color::Green);
-	ThirdCircle->transform.SetPosition(Vector2(500, 100));
+	ThirdCircle->transform.SetPosition(Vector2(500, 300));
 	ThirdCircle->rigidbody.currentVelocity = Vector2(0, 0);
 	ThirdCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
@@ -118,8 +118,8 @@ void GameScreen::LoadObjects() {
 	//if (parentCircle->rigidbody.gameObject == parentCircle)
 	//	std::cout << "true\n";
 
-	
-	
+
+
 }
 
 void GameScreen::GetInput(sf::RenderWindow &win)
@@ -127,8 +127,15 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
-		LoadObjects();
+		if (!isReset)
+		{
+			LoadObjects();
+			isReset = true;
+			std::cout << "Balls reset." << std::endl;
+		}
 	}
+
+
 	if (FirstCircle)
 	{
 		sf::Vector2i mousePosI;
@@ -136,6 +143,7 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
+			isReset = false;
 			if (isShooting)
 			{
 				mousePosI = sf::Mouse::getPosition(win);
@@ -153,13 +161,36 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 		}
 		else if (isShooting)
 		{
-			shotVel = sf::Vector2i(shotLine[1].position - shotLine[0].position) / 3;
+			shotVel = sf::Vector2i(shotLine[0].position - shotLine[1].position) / 3;
 			std::cout << "Shot Velocity = " << shotVel.x << ", " << shotVel.y << std::endl;
 			FirstCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
 			isShooting = false;
 		}
+
+		if (SecondCircle)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			{
+				if (SecondCircle->parent == scene)
+				{
+					scene->RemoveChild(SecondCircle);
+					FirstCircle->AddChild(SecondCircle);
+				}
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			{
+				if (SecondCircle->parent == FirstCircle)
+				{
+					FirstCircle->RemoveChild(SecondCircle);
+					scene->AddChild(SecondCircle);
+				}
+			}
+		}
+
+
 	}
-	
+
 }
 
 void GameScreen::CheckHole()
@@ -207,6 +238,6 @@ void GameScreen::CheckHole()
 		}
 	}
 
-	
+
 
 }

@@ -11,7 +11,7 @@
 #include <list>
 
 
-class GameObject: public sf::Drawable {
+class GameObject : public sf::Drawable {
 public:
 	GameObject();
 
@@ -23,6 +23,9 @@ public:
 
 
 	virtual void Update(float msec);
+
+	GameObject* parent;
+
 
 
 	void AddComponent(Component* newS) { Components.push_back(newS); }
@@ -44,7 +47,7 @@ public:
 
 protected:
 
-	GameObject* parent;
+
 	std::vector<GameObject*> children;
 	//Rigidbody rigidBody;
 };

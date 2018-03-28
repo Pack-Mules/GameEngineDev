@@ -20,10 +20,10 @@ public:
 
 	void CheckHole();
 
-	
+
 
 public:
-	GameObject *scene;
+	GameObject * scene;
 	GameObject *FirstCircle;
 	GameObject *SecondCircle;
 	GameObject *ThirdCircle;
@@ -31,6 +31,7 @@ public:
 
 	sf::Vertex shotLine[2];
 	bool isShooting;
+	bool isReset;
 	sf::Vector2i shotVel;
 
 

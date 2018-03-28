@@ -32,11 +32,11 @@ private:
 	void GetInputDevices();
 	void GetOutputDevices();
 	float GetCPUSpeed();
-	
+
 	void playSound(std::string fileName);
 	void playMusic(std::string fileName);
 
-	
+
 
 	enum GameState {
 		Uninitialized,
@@ -50,8 +50,8 @@ private:
 	void SwitchStateTo(GameState newState);
 	GameState gameState = Uninitialized;
 	sf::RenderWindow mainWindow;
-	
-	
+
+
 	sf::SoundBuffer mainAudioBuffer;
 	sf::Music bgm;
 

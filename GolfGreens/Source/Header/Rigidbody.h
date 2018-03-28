@@ -24,6 +24,7 @@ public:
 	Transform* transform; 
 	sf::CircleShape *cs;
 
+	float frictionVal = 1.0f;
 	float mass = 1.0f;                             // Mass of the RigidBody
 	float bounciness = 1;                        // The bounciness factor (value between 0 and 1, 0 being no bounce, and 1 being super bouncy!)
 	bool obeysGravity = true;                    // Whether or not this body obeys gravity
@@ -118,7 +119,7 @@ public:
 
 		currentVelocity += acceleration * dT;
 
-		float frictionEffect = 1.0f;// 0.998f; //1 for zero friction
+		float frictionEffect = frictionVal;// 0.998f; //1 for zero friction
 		currentVelocity *= frictionEffect;
 
 		//slowing down

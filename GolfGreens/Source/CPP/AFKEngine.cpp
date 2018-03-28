@@ -106,7 +106,7 @@ void AFKEngine::Update() {
 				gameState = AFKEngine::Exiting;
 		}
 
-		mainWindow.clear();
+		mainWindow.clear(sf::Color(0, 45, 0, 255));
 
 		//STATE Functions
 		switch (gameState) {

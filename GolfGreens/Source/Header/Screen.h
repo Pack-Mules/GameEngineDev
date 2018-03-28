@@ -24,6 +24,10 @@ public:
 		LoadedObjects = true;
 	}
 
+	virtual void GetInput(sf::RenderWindow &win) {
+
+	}
+
 	bool isReady() {
 		if (LoadedObjects && LoadedAssets)
 			return true;

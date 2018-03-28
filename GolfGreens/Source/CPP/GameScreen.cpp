@@ -16,6 +16,7 @@ GameScreen::GameScreen() {
 }
 
 void GameScreen::Update(sf::RenderWindow &win) {
+	GetInput(win);
 	float dt = 0.01f;// &clock.getElapsedTime().asMilliseconds;
 	FirstCircle->Update(dt);
 	SecondCircle->Update(dt);
@@ -31,6 +32,10 @@ void GameScreen::Draw(sf::RenderWindow &win) {
 	win.draw(FirstCircle->cs);
 	win.draw(SecondCircle->cs);
 	win.draw(ThirdCircle->cs);
+	if (isShooting)
+	{
+		win.draw(shotLine, 2, sf::Lines);
+	}
 }
 
 void GameScreen::LoadAssets() {
@@ -61,7 +66,7 @@ void GameScreen::LoadObjects() {
 	FirstCircle->cs.setRadius(20.0f);
 	FirstCircle->cs.setFillColor(sf::Color::White);
 	FirstCircle->transform.SetPosition(Vector2(30, 30));
-	FirstCircle->rigidbody.currentVelocity = Vector2(40, 0);
+	FirstCircle->rigidbody.currentVelocity = Vector2(0, 0);
 	FirstCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
 	SecondCircle->cs.setRadius(20.0f);
@@ -77,6 +82,10 @@ void GameScreen::LoadObjects() {
 	ThirdCircle->rigidbody.currentVelocity = Vector2(0, 0);
 	ThirdCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
+	FirstCircle->rigidbody.frictionVal = 0.9999f;
+	SecondCircle->rigidbody.frictionVal = 0.9999f;
+	ThirdCircle->rigidbody.frictionVal = 0.9999f;
+
 
 
 	LoadedObjects = true;
@@ -84,4 +93,35 @@ void GameScreen::LoadObjects() {
 	//if (parentCircle->rigidbody.gameObject == parentCircle)
 	//	std::cout << "true\n";
 	
+}
+
+void GameScreen::GetInput(sf::RenderWindow &win)
+{
+	sf::Vector2i mousePosI;
+	sf::Vector2f mousePosF;
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		if (isShooting)
+		{
+			mousePosI = sf::Mouse::getPosition(win);
+			mousePosF = sf::Vector2f(mousePosI);
+			shotLine[1] = mousePosF;
+		}
+		else
+		{
+			isShooting = true;
+			mousePosI = sf::Mouse::getPosition(win);
+			mousePosF = sf::Vector2f(mousePosI);
+			shotLine[0] = mousePosF;
+			std::cout << mousePosF.x << ", " << mousePosF.y << std::endl;
+		}
+	}
+	else if (isShooting)
+	{
+		shotVel = sf::Vector2i(shotLine[1].position - shotLine[0].position);
+		std::cout << "Shot Velocity = " << shotVel.x << ", " << shotVel.y << std::endl;
+		FirstCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
+		isShooting = false;
+	}
 }

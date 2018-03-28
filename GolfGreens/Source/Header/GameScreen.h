@@ -16,6 +16,8 @@ public:
 	void LoadAssets() override;
 	void LoadObjects() override;
 
+	void GetInput(sf::RenderWindow &win) override;
+
 	
 
 public:
@@ -23,6 +25,10 @@ public:
 	GameObject *FirstCircle;
 	GameObject *SecondCircle;
 	GameObject *ThirdCircle;
+
+	sf::Vertex shotLine[2];
+	bool isShooting;
+	sf::Vector2i shotVel;
 
 
 	//objects

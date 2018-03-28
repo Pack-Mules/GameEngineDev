@@ -74,8 +74,8 @@ public:
 
 		//bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
 		
-		aabb.bLeft = Vector2(transform->xWorld, transform->yWorld);
-		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld + cs->getGlobalBounds().height);
+		aabb.bLeft = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
+		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld );
 
 		/*Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
 		

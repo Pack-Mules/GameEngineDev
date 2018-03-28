@@ -18,6 +18,8 @@ public:
 
 	void GetInput(sf::RenderWindow &win) override;
 
+	void CheckHole();
+
 	
 
 public:
@@ -25,6 +27,7 @@ public:
 	GameObject *FirstCircle;
 	GameObject *SecondCircle;
 	GameObject *ThirdCircle;
+	GameObject *ImmovableCircle;
 
 	sf::Vertex shotLine[2];
 	bool isShooting;

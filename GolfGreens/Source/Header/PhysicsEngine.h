@@ -46,6 +46,11 @@ public:
 		std::cout << "Added rigidbody: " << &rigidBody << std::endl;
 	}
 
+	void RemoveRigidBody(Rigidbody* rigidBody) {
+		rigidBodies.remove(rigidBody);
+		std::cout << "Removed rigidbody: " << &rigidBody << std::endl;
+	}
+
 	void IntegrateBodies(float dT) {
 		for(Rigidbody *rb : rigidBodies) {
 			rb->Integrate(dT);
@@ -151,11 +156,11 @@ private:
 						float radiusB = (bodyB->aabb.tRight.x - bodyB->aabb.bLeft.x) / 2;
 
 						float radii = radiusA + radiusB;
-						Vector2 distance = Vector2(bodyB->transform->xWorld - bodyA->transform->xWorld,
-							bodyB->transform->yWorld - bodyA->transform->yWorld);
+						Vector2 distance = Vector2((bodyB->transform->xWorld + bodyB->cs->getGlobalBounds().width / 2) - (bodyA->transform->xWorld + bodyA->cs->getGlobalBounds().width / 2),
+							(bodyB->transform->yWorld + bodyB->cs->getGlobalBounds().height / 2) - (bodyA->transform->yWorld + bodyA->cs->getGlobalBounds().height / 2));
 						if ((distance.x*distance.x)+(distance.y*distance.y) <= (radii*radii)) {
 							//erase old reference to map
-							std::cout << "COLLISION" << std::endl;
+							//std::cout << "COLLISION" << std::endl;
 							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
 							for (it = collisions.begin(); it != collisions.end(); it++) {
 								if (it->first == pairID) {
@@ -216,8 +221,8 @@ private:
 			Vector2 impulse = j * it.second.second.collisionNormal;
 
 			// ... update velocities
-
-			pair.rigidBodyA->currentVelocity -= impulse;
+			if (pair.rigidBodyA->moveable)
+				pair.rigidBodyA->currentVelocity -= impulse;
 			if (pair.rigidBodyB->moveable)
 				pair.rigidBodyB->currentVelocity += impulse;
 			if (abs(it.second.second.penetration) > 0.01f) {

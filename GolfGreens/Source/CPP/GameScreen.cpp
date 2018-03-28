@@ -56,10 +56,12 @@ void GameScreen::LoadObjects() {
 	FirstCircle->cs.setRadius(50.0f);
 	FirstCircle->cs.setFillColor(sf::Color::Green);
 	FirstCircle->rigidbody.currentVelocity = Vector2(20, 0);
+	FirstCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 
 	SecondCircle->cs.setRadius(50.0f);
 	SecondCircle->cs.setFillColor(sf::Color::Blue);
 	SecondCircle->transform.SetPosition(Vector2(500, 0));
+	SecondCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 	//SecondCircle->rigidbody.currentVelocity = Vector2(-20, 0);
 
 

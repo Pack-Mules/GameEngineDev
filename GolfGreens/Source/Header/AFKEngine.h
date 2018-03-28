@@ -14,6 +14,11 @@ public:
 	AFKEngine();
 	void Start();
 	bool Initialize(int argc, char *argv[]);
+
+
+	const static int ScreenWidth = 1024;
+	const static int ScreenHeight = 768;
+
 private:
 	void LoadAssets();
 	void LoadObjects();
@@ -56,7 +61,6 @@ private:
 	float minDriveSpace;
 	float minMemory;
 	float minCPUSpeed;
-
 
 
 private:

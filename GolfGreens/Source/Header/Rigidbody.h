@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Vectors.h"
 #include "Transform.h"
+#include "AFKEngine.h"
 
 class Rigidbody : public Component {
 public:
@@ -120,13 +121,33 @@ public:
 		float frictionEffect = 1.0f;// 0.998f; //1 for zero friction
 		currentVelocity *= frictionEffect;
 
+		//slowing down
 		if (currentVelocity.length() < 0.01f)
 			currentVelocity = Vector2(0,0);
+
+		
+
 
 		//Vector2 temp = Vector2(transform->x, transform->y);
 		//temp += currentVelocity * dT;
 		transform->Translate(currentVelocity*dT);
+		//moving
+		
 		SetAABB();
+		//updating new bounding box
+
+		//if hit edges...
+		if(aabb.bLeft.x < 0)
+			currentVelocity.x = abs(currentVelocity.x);
+		if(aabb.bLeft.y < 0)
+			currentVelocity.y = abs(currentVelocity.y);
+
+		if (aabb.tRight.x > AFKEngine::ScreenWidth)
+			currentVelocity.x = -abs(currentVelocity.x);
+		if (aabb.tRight.y > AFKEngine::ScreenHeight)
+			currentVelocity.y = -abs(currentVelocity.y);
+		
+
 
 		totalForces = Vector2(0.0f, 0.0f);
 	}

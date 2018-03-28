@@ -64,7 +64,7 @@ void AFKEngine::Start() {
 	SwitchStateTo(Playing);
 
 	//Graphics system
-	mainWindow.create(sf::VideoMode(1024, 768, 32), "A Game");
+	mainWindow.create(sf::VideoMode(ScreenWidth, ScreenHeight, 32), "A Game");
 	clock.restart();
 
 	LoadAssets();

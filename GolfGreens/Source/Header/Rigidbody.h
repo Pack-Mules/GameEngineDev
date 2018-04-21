@@ -23,6 +23,7 @@ public:
 	//the other transform component of the gameObject
 	Transform* transform;
 	sf::CircleShape *cs;
+	sf::RectangleShape *rs;
 
 	float frictionVal = 1.0f;
 	float mass = 1.0f;                             // Mass of the RigidBody
@@ -73,10 +74,14 @@ public:
 
 
 		//bounds[1] = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
-
-		aabb.bLeft = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
-		aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
-
+		if (shape == Shape::Circle) {
+			aabb.bLeft = Vector2(transform->xWorld, transform->yWorld + cs->getGlobalBounds().height);
+			aabb.tRight = Vector2(transform->xWorld + cs->getGlobalBounds().width, transform->yWorld);
+		}
+		else {
+			aabb.bLeft = Vector2(transform->xWorld, transform->yWorld + rs->getGlobalBounds().height);
+			aabb.tRight = Vector2(transform->xWorld + rs->getGlobalBounds().width, transform->yWorld);
+		}
 		/*Bounds bound = new Bounds(new Vector2(0, 0), new Vector2(1, 1));
 
 		Renderer renderer = GetComponent<Renderer>();

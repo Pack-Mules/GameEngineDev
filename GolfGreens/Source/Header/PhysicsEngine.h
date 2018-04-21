@@ -189,6 +189,119 @@ private:
 						}
 
 					}
+					//CIRCLE-SQUARE COLLISION
+					else if (bodyA->shape != bodyB->shape) {
+						Rigidbody *circle;
+						Rigidbody *rectangle;
+						
+						if (bodyA->shape == Rigidbody::Shape::Circle) {
+							circle = bodyA;
+							rectangle = bodyB;
+						} else {
+							circle = bodyB;
+							rectangle = bodyA;
+						}
+
+						float radius = (circle->aabb.tRight.x - circle->aabb.bLeft.x) / 2;
+
+						//this doesn't account for rotation yet
+						float width = abs(rectangle->aabb.tRight.x - rectangle->aabb.bLeft.x);
+						float height = abs(rectangle->aabb.tRight.y - rectangle->aabb.bLeft.y);
+
+						//nearest point on rectangle to circle
+						//https://yal.cc/rectangle-circle-intersection-test/
+						float nearestX = std::max(rectangle->transform->xWorld, std::min(circle->transform->xWorld + radius, rectangle->transform->xWorld + width));
+						float nearestY = std::max(rectangle->transform->yWorld, std::min(circle->transform->yWorld + radius, rectangle->transform->yWorld + height));
+						Vector2 distance = Vector2(
+							circle->transform->xWorld + radius - nearestX,
+							circle->transform->yWorld + radius - nearestY);
+						
+						
+						if (circle->gameObject->name == "First") {
+							//std::cout << "XY RECT: " << nearestX << ", " << nearestY << std::endl;
+							//std::cout << "DISTANCE: " << distance.x << ", " << distance.y<< std::endl;
+							//std::cout << "DistanceSQRT: " << distance.x  * distance.x + distance.y * distance.y << " < " << radius * radius << std::endl;
+						}
+
+
+						if ((distance.x * distance.x + distance.y * distance.y) <= (radius * radius)) {
+						//	std::cout << "CONTACT!!!" << std::endl;
+							//erase old reference to map
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
+							}
+
+							//devblog.lukesterwebdesign.com/circle-rectangle-collision
+							//checking if we are going to hit the points and not the flat sides
+							bool outsideX = 
+								circle->transform->xWorld + radius < rectangle->transform->xWorld ||
+								circle->transform->xWorld + radius >  rectangle->transform->xWorld + width;
+							bool outsideY =
+								circle->transform->yWorld + radius < rectangle->transform->yWorld ||
+								circle->transform->yWorld + radius >  rectangle->transform->yWorld + height;
+
+
+							if (outsideX && outsideY)
+							{
+								//hitting points
+								std::cout << "Hit point" << std::endl;
+								//float magnitude = distance.length();
+								Vector2 normal = distance.normalize();
+								//normal.x *= (radius / magnitude - 1);
+								//normal.y *= (radius / magnitude - 1);
+								colInfo.collisionNormal = normal;
+								colInfo.penetration = radius - distance.length();
+							}
+							else {
+								//hitting sides
+
+
+								if (abs(distance.x) > abs(distance.y)) {
+									std::cout << "Hit lr side" << std::endl;
+									//body1 is to the right of body2
+									if (distance.x > 0) {
+										colInfo.collisionNormal = Vector2(1, 0);
+									}
+									//body1 is to the left of body2
+									else {
+										colInfo.collisionNormal = Vector2(-1, 0);
+									}
+									colInfo.penetration = distance.x;
+								} else {
+									std::cout << "Hit td side" << std::endl;
+									//body1 is above body2
+									if (distance.y > 0) {
+										colInfo.collisionNormal = Vector2(0, 1);
+									}
+									//body1 is below body2
+									else {
+										colInfo.collisionNormal = Vector2(0, -1);
+									}
+									colInfo.penetration = distance.y;
+								}
+
+							}
+
+
+							//pass collision normal and penetration info
+
+							collisions.insert(std::make_pair(pairID, std::make_pair(pair, colInfo)));
+						}
+						else {
+							//no collision
+							std::map<int, std::pair<CollisionPair, CollisionInfo>>::iterator it;
+							for (it = collisions.begin(); it != collisions.end(); it++) {
+								if (it->first == pairID) {
+									collisions.erase(it);
+									break;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -219,6 +332,11 @@ private:
 
 
 			Vector2 impulse = j * it.second.second.collisionNormal;
+
+			if (!pair.rigidBodyA->moveable || !pair.rigidBodyB->moveable)
+				impulse *= 2;
+
+
 
 			// ... update velocities
 			if (pair.rigidBodyA->moveable)
@@ -255,11 +373,13 @@ private:
 
 		Vector2 temp = Vector2(c.rigidBodyA->transform->x, c.rigidBodyA->transform->y);
 		temp -= invMassA * correction;
-		c.rigidBodyA->transform->SetPosition(temp);
+		if (c.rigidBodyA->moveable)
+			c.rigidBodyA->transform->SetPosition(temp);
 
 		temp = Vector2(c.rigidBodyB->transform->x, c.rigidBodyB->transform->y);
 		temp += invMassB * correction;
-		c.rigidBodyB->transform->SetPosition(temp);
+		if(c.rigidBodyB->moveable)
+			c.rigidBodyB->transform->SetPosition(temp);
 	}
 
 public:

@@ -28,6 +28,7 @@ public:
 	GameObject *SecondCircle;
 	GameObject *ThirdCircle;
 	GameObject *ImmovableCircle;
+	GameObject *ImmovableSquare;
 
 	sf::Vertex shotLine[2];
 	bool isShooting;

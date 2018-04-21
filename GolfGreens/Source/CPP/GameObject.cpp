@@ -7,8 +7,10 @@ GameObject::GameObject() {
 	rigidbody.id = this->id;
 	rigidbody.gameObject = this;
 	rigidbody.transform = &transform;
-	rigidbody.cs = &cs;
 	Components.push_back(&transform);
+
+	rigidbody.cs = &cs;
+	rigidbody.rs = &rs;
 }
 
 GameObject::~GameObject() {
@@ -55,7 +57,7 @@ void GameObject::Update(float msec) {
 
 	//our sprite
 	cs.setPosition(transform.xWorld, transform.yWorld);
-
+	rs.setPosition(transform.xWorld, transform.yWorld);
 
 	//Updating world position values
 	if (parent) { //This node has a parent...

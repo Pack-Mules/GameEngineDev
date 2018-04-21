@@ -32,7 +32,10 @@ public:
 
 	Transform transform;
 	Rigidbody rigidbody;
+
 	sf::CircleShape cs;
+	sf::RectangleShape rs;
+
 	std::list<Component*> Components;
 
 	sf::Sprite sprite;

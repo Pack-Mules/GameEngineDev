@@ -24,8 +24,10 @@ void GameScreen::Update(sf::RenderWindow &win) {
 		SecondCircle->Update(dt);
 	if (ThirdCircle)
 		ThirdCircle->Update(dt);
-
+	if(ImmovableSquare)
+		ImmovableSquare->Update(dt);
 	ImmovableCircle->Update(dt);
+
 	//moving circle
 	//std::cout << FirstCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << FirstCircle->rigidbody.aabb.tRight << std::endl;
 	//std::cout << SecondCircle->name << ": " << FirstCircle->rigidbody.aabb.bLeft << ", " << SecondCircle->rigidbody.aabb.tRight << std::endl;
@@ -43,6 +45,9 @@ void GameScreen::Draw(sf::RenderWindow &win) {
 		win.draw(SecondCircle->cs);
 	if (ThirdCircle)
 		win.draw(ThirdCircle->cs);
+	if(ImmovableSquare)
+		win.draw(ImmovableSquare->rs);
+
 	if (isShooting)
 	{
 		win.draw(shotLine, 2, sf::Lines);
@@ -61,22 +66,26 @@ void GameScreen::LoadObjects() {
 	SecondCircle = new GameObject();
 	ThirdCircle = new GameObject();
 	ImmovableCircle = new GameObject();
+	ImmovableSquare = new GameObject();
 
 	scene->name = "Scene";
 	FirstCircle->name = "First";
 	SecondCircle->name = "Second";
 	ThirdCircle->name = "Third";
 	ImmovableCircle->name = "Block";
+	ImmovableSquare->name = "Wall";
 
 	physics->AddRigidBody(&FirstCircle->rigidbody);
 	physics->AddRigidBody(&SecondCircle->rigidbody);
 	physics->AddRigidBody(&ThirdCircle->rigidbody);
 	//physics->AddRigidBody(&ImmovableCircle->rigidbody);
+	physics->AddRigidBody(&ImmovableSquare->rigidbody);
 
 	scene->AddChild(FirstCircle);
 	scene->AddChild(SecondCircle);
 	scene->AddChild(ThirdCircle);
 	scene->AddChild(ImmovableCircle);
+	scene->AddChild(ImmovableSquare);
 
 	FirstCircle->cs.setRadius(20.0f);
 	FirstCircle->cs.setFillColor(sf::Color::White);
@@ -104,15 +113,26 @@ void GameScreen::LoadObjects() {
 	ImmovableCircle->rigidbody.shape = Rigidbody::Shape::Circle;
 	//ImmovableCircle->rigidbody.moveable = false;
 
+
+	ImmovableSquare->rs.setSize(sf::Vector2f(90.0f, 150.0f));
+	ImmovableSquare->rs.setFillColor(sf::Color::Magenta);
+	ImmovableSquare->transform.SetPosition(Vector2(200,450));
+	ImmovableSquare->rigidbody.currentVelocity = Vector2(0, 0);
+	ImmovableSquare->rigidbody.shape = Rigidbody::Shape::Rectangle;
+	ImmovableSquare->rigidbody.moveable = false;
+
+
 	FirstCircle->rigidbody.frictionVal = 0.9996f;
 	SecondCircle->rigidbody.frictionVal = 0.9996f;
 	ThirdCircle->rigidbody.frictionVal = 0.9996f;
 	ImmovableCircle->rigidbody.frictionVal = 0;
+	ImmovableSquare->rigidbody.frictionVal = 0;
 
 	FirstCircle->Update(0.01f);
 	SecondCircle->Update(0.01f);
 	ThirdCircle->Update(0.01f);
 	ImmovableCircle->Update(0.01f);
+	ImmovableSquare->Update(0.01f);
 	LoadedObjects = true;
 
 	//if (parentCircle->rigidbody.gameObject == parentCircle)
@@ -143,6 +163,11 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
+			/* For testingn collision (click and hold to move object there)
+			sf::Vector2i test1 = sf::Mouse::getPosition(win);
+			FirstCircle->transform.SetPosition(Vector2((float)test1.x, (float)test1.y));
+			*/
+
 			isReset = false;
 			if (isShooting)
 			{

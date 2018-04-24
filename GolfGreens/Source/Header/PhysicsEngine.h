@@ -27,6 +27,7 @@ private:
 
 
 
+
 public:
 	bool IsGrounded(Rigidbody *rigidBody) {
 		for (Rigidbody *rb : rigidBodies) {

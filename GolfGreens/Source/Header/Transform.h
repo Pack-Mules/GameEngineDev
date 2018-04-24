@@ -49,6 +49,10 @@ private:
 		xWorldScale = WorldScale[10]; yWorldScale = WorldScale[5]; zWorldScale = WorldScale[10];
 	}
 
+	void UpdateRotation() {
+		
+	}
+
 public:
 	float x;
 	float y;

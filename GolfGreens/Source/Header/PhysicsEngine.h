@@ -66,7 +66,7 @@ private:
 			//starting from a, compares everything. no code in c++ though
 			for (Rigidbody* bodyB : rigidBodies) {
 				if (bodyA->id != bodyB->id) {
-					int pairID = bodyA->id * 10 * 5 / 2 + bodyB->id * 10 * 5 / 2;
+					int pairID = bodyA->id * 10 * 5 / 2 * 4 + bodyB->id * 10 * 5 / 2 * 4;
 					CollisionPair pair = CollisionPair();
 					CollisionInfo colInfo = CollisionInfo();
 					pair.rigidBodyA = bodyA; pair.rigidBodyB = bodyB;

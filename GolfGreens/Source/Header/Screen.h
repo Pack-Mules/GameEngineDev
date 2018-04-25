@@ -2,6 +2,9 @@
 #define SCREEN_H
 
 #include <SFML/Graphics.hpp>
+#include "SFML/Audio.hpp"
+#include <iostream>
+#include <Windows.h>
 
 class Screen {
 
@@ -34,9 +37,22 @@ public:
 		return false;
 	}
 
+	void playSound(std::string fileName) {
+		if (!mainAudioBuffer.loadFromFile("../../Assets/Audio/SFX/" + fileName)) {
+			std::cout << "Failure" << std::endl;
+			return;
+		}
+
+		sfx.setBuffer(mainAudioBuffer);
+		sfx.play();
+	}
 public:
 	bool LoadedObjects = false;
 	bool LoadedAssets = false;
+
+
+	sf::SoundBuffer mainAudioBuffer;
+	sf::Sound sfx;
 private:
 
 };

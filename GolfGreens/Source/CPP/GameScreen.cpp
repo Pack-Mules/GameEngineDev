@@ -244,6 +244,8 @@ void GameScreen::GenerateMap()
 }
 void GameScreen::CreateWall(GameObject *wall, float sx, float sy, int x, int y, sf::Color color)
 {
+	color = sf::Color(205, 133, 63, 255);
+
 	physics->AddRigidBody(&wall->rigidbody);
 	scene->AddChild(wall);
 	wall->rs.setSize(sf::Vector2f(sx, sy));
@@ -307,6 +309,7 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 			player1count++;
 			
 			FirstCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
+			playSound("GolfBallHit.flac");
 			if (SecondCircle)
 			{
 				shotTurn = 2;
@@ -356,6 +359,8 @@ void GameScreen::GetInput(sf::RenderWindow &win)
 			std::cout << "Shot Velocity = " << shotVel.x << ", " << shotVel.y << std::endl;
 			player2count++;
 			SecondCircle->rigidbody.currentVelocity = Vector2(shotVel.x, shotVel.y);
+			playSound("GolfBallHit.flac");
+			
 			if (FirstCircle)
 			{
 				shotTurn = 1; 

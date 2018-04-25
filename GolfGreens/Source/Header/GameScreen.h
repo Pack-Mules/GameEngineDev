@@ -80,5 +80,7 @@ public:
 	//sf::CircleShape parentCircleShape;
 	//sf::CircleShape childCircleShape;
 private:
+
+	
 };
 #endif

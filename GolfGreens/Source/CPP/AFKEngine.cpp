@@ -150,23 +150,14 @@ void AFKEngine::SwitchStateTo(GameState newState) {
 }
 
 
-void AFKEngine::playSound(std::string fileName) {
-	if (!mainAudioBuffer.loadFromFile(fileName)) {
-		std::cout << "Failure" << std::endl;
-		return;
-	}
 
-	sf::Sound sound;
-	sound.setBuffer(mainAudioBuffer);
-	sound.play();
-}
 
 void AFKEngine::playMusic(std::string fileName) {
 	bgm.stop();
 	if (!bgm.openFromFile("../../Assets/Audio/BGM/" + fileName))
 		return;
 	bgm.setLoop(true);
-	bgm.setVolume(60.0f);
+	bgm.setVolume(30.0f);
 	bgm.play();
 
 }

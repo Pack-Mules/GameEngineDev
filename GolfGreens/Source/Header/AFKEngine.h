@@ -19,6 +19,9 @@ public:
 	const static int ScreenWidth = 1024;
 	const static int ScreenHeight = 768;
 
+	static AFKEngine* instance;
+
+	void playMusic(std::string fileName);
 private:
 	void LoadAssets();
 	void LoadObjects();
@@ -33,8 +36,6 @@ private:
 	void GetOutputDevices();
 	float GetCPUSpeed();
 
-	void playSound(std::string fileName);
-	void playMusic(std::string fileName);
 
 
 
@@ -51,8 +52,6 @@ private:
 	GameState gameState = Uninitialized;
 	sf::RenderWindow mainWindow;
 
-
-	sf::SoundBuffer mainAudioBuffer;
 	sf::Music bgm;
 
 	float stateTimer = 0.0f;
